@@ -65,7 +65,7 @@ const addTransactionToMempool = async (transaction) => {
 }
 
 const passTransaction = async (transaction) => {
-    console.log("Executing transaction ", transaction);
+    
     try {
         
         //update wallets of the sender and recipient
@@ -78,8 +78,10 @@ const passTransaction = async (transaction) => {
         recipientWallet.receivedTransactions.push(transaction);
         recipientWallet.solde = recipientWallet.solde + transaction.amount;
         await addOrUpdateWallet(senderWallet);
+        
+        console.log("Updated Recipient Wallet:", recipientWallet);
         await addOrUpdateWallet(recipientWallet);
-        console.log("Transaction executed successfully:", transaction);
+        console.log("Transaction executed successfully");
         return true;
     }
     catch (error) {

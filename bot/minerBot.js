@@ -2,7 +2,7 @@ const axios = require('axios');
 const crypto = require('crypto');
 
 // Replace with your actual miner's public key
-const MINER_PUBLIC_KEY = '-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArp7Eu7xjrw8a6zU88T0T\ndYY993F1CuwLExrV6sntO7zsr/pYKJdZ4QUXPqgMN5F67jkyjxyNjjsfFiIWs80X\naO8CSEoeXR0ulMMVYGAOgS2OafIPsUxC3cjHhE197+UeRZW1WckiXUzhqciQ/LdM\nuUJtw6Zl6BC+URMMkPHJPKfgqHDTGFBd0v2NCw/g2Is3tCBNRqLAgBTXez3NpW3E\nIsspZoOd6ZjHCjvSr5VVJ/JMinEbTh5BOg9uEMSpjm0Em+7njWyfKQ3oSc0ehp6Y\nmTRR4TmskPFyblhGNIlTM/TJ71LqvgxgODAX4x0750cb3CIfHNv07g9gT8Ki4dr7\nMwIDAQAB\n-----END PUBLIC KEY-----\n';
+const MINER_PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkR43GqCp9+qhX3PZH8Lg\ngTLHJPpuCYeRloGmfn+UoVYt0650nzcek5hs0jbF9jm5gK6UQYwwxcK8DaIMVAR4\nhKfzHnG8ua+OrTGlHXwC/QRjnsHuun+meyCt+xTe7sQdnMO8GEALl75flhRyCPgF\nmszA0en51gqFgD6aSwssec0SZYeqQJUIlH3LKqMK3DesY97VltgH7K73uAstiaG7\n766LN+7e/+VZRq0SyNGsdIPd2VMGwiQLMS14ZohndX31Fgqf/ucRKj9wMeM6LYHj\n6A9SZ2mDIhOJ/0y4DepIRnttxK8nrOeOYfv2q+zdXpFIk/dEIbJrESlykCB/Gp50\n/wIDAQAB\n-----END PUBLIC KEY-----\n";
 
 // Simple hash function for blocks
 function calculateHash(block) {

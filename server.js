@@ -189,8 +189,10 @@ app.get('/mempool', async (req, res) => {
 });  
 app.post('/solde', async (req, res) => {
     const address = req.body.address ;
+    console.log("Address to check balance:", address);
     try {
         const balance = await getSolde(address);
+        console.log("Balance for address:", address, "is", balance);
         res.status(200).json({ address, balance });
     } catch (error) {
         console.error('Error fetching balance:', error);

@@ -184,6 +184,30 @@
       margin-top: 40px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
+    
+    /* New styles for wallet creation */
+    .wallet-card {
+      background: rgba(255, 255, 255, 0.12);
+      border-left: 4px solid var(--success);
+    }
+    
+    .key-display {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 12px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      word-break: break-all;
+      position: relative;
+    }
+    
+    .copy-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+    }
   </style>
 </head>
 <body>
@@ -218,6 +242,52 @@
     <div class="row">
       <!-- Left Column -->
       <div class="col-lg-6">
+        <!-- Wallet Creation -->
+        <div class="card wallet-card mb-4">
+          <div class="card-header d-flex align-items-center">
+            <i class="bi bi-wallet2 me-2"></i>
+            Create Wallet
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <p>Create a new wallet to start transacting on the uemf blockchain.</p>
+              <button id="createWalletBtn" class="btn btn-primary w-100">
+                <i class="bi bi-plus-circle me-1"></i>
+                <span id="createWalletBtnText">Create New Wallet</span>
+                <span id="walletSpinner" class="spinner" style="display: none;"></span>
+              </button>
+            </div>
+            <div id="walletResult" class="mt-3" style="display: none;">
+              <div class="alert alert-success">
+                <i class="bi bi-check-circle me-2"></i>
+                Wallet created successfully! Please save your private key securely.
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Public Key</label>
+                <div class="key-display">
+                  <span id="publicKeyDisplay">None</span>
+                  <button class="btn btn-sm btn-outline-light copy-btn" data-key="public">
+                    <i class="bi bi-clipboard"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Private Key</label>
+                <div class="key-display">
+                  <span id="privateKeyDisplay">None</span>
+                  <button class="btn btn-sm btn-outline-light copy-btn" data-key="private">
+                    <i class="bi bi-clipboard"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Your private key is only shown once. Save it securely as it cannot be recovered.
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Wallet Balance Checker -->
         <div class="card mb-4">
           <div class="card-header d-flex align-items-center">
@@ -364,6 +434,14 @@
                 <div class="text-muted small">Coin Symbol</div>
                 <div>uemfCoin (UC)</div>
               </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Port</div>
+                <div>3000</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Version</div>
+                <div>1.0.0</div>
+              </div>
             </div>
           </div>
         </div>
@@ -406,6 +484,10 @@
       blockHeight: document.getElementById("blockHeight"),
       nodeStatus: document.getElementById("nodeStatus"),
       apiEndpoint: document.getElementById("apiEndpoint"),
+      createWalletBtn: document.getElementById("createWalletBtn"),
+      walletResult: document.getElementById("walletResult"),
+      publicKeyDisplay: document.getElementById("publicKeyDisplay"),
+      privateKeyDisplay: document.getElementById("privateKeyDisplay"),
       
       // Buttons with spinners
       txBtn: document.getElementById("txBtn"),
@@ -415,16 +497,27 @@
       balanceBtnText: document.getElementById("balanceBtnText"),
       balanceSpinner: document.getElementById("balanceSpinner"),
       mineBtnText: document.getElementById("mineBtnText"),
-      mineSpinner: document.getElementById("mineSpinner")
+      mineSpinner: document.getElementById("mineSpinner"),
+      walletBtnText: document.getElementById("createWalletBtnText"),
+      walletSpinner: document.getElementById("walletSpinner")
     };
 
     // Initialize the app
     function init() {
+      // Set the API endpoint display
+      elements.apiEndpoint.textContent = API;
+      
       // Attach event listeners
       elements.transactionForm.addEventListener("submit", handleTransactionSubmit);
       elements.balanceForm.addEventListener("submit", handleBalanceCheck);
       elements.refreshMempoolBtn.addEventListener("click", loadMempool);
       elements.mineBtn.addEventListener("click", startMining);
+      elements.createWalletBtn.addEventListener("click", createWallet);
+      
+      // Attach copy event listeners
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', copyToClipboard);
+      });
       
       // Load initial data
       loadMempool();
@@ -433,80 +526,96 @@
 
     // Handle transaction submission
     async function handleTransactionSubmit(e) {
-      e.preventDefault();
-      showLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
-      
-      const tx = {
-        sender: document.getElementById("sender").value,
-        receiver: document.getElementById("receiver").value,
-        amount: parseFloat(document.getElementById("amount").value),
-        fees: parseFloat(document.getElementById("fees").value),
-        signature: document.getElementById("signature").value
-      };
+  e.preventDefault();
+  showLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
 
-      try {
-        const res = await fetch(`${API}/addTransaction`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(tx)
-        });
-        
-        const data = await res.json();
-        
-        if (res.ok) {
-          showResult(elements.txResult, "✅ Transaction added to mempool.", true);
-          // Clear form
-          elements.transactionForm.reset();
-          document.getElementById("fees").value = "0.1";
-          // Refresh mempool
-          loadMempool();
-        } else {
-          showResult(elements.txResult, `❌ Error: ${data.error || "Failed to add transaction"}`, false);
-        }
-      } catch (error) {
-        showResult(elements.txResult, `❌ Network error: ${error.message}`, false);
-      } finally {
-        hideLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
-      }
+  let sender = document.getElementById("sender").value.trim();
+  let receiver = document.getElementById("receiver").value.trim();
+
+  // Convert escaped \n to real line breaks if needed
+  if (sender.includes("\\n")) sender = sender.split("\\n").join("\n");
+  if (receiver.includes("\\n")) receiver = receiver.split("\\n").join("\n");
+
+  const tx = {
+    sender,
+    receiver,
+    amount: parseFloat(document.getElementById("amount").value),
+    fees: parseFloat(document.getElementById("fees").value),
+    signature: document.getElementById("signature").value
+  };
+
+  try {
+    const res = await fetch(`${API}/addTransaction`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(tx)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showResult(elements.txResult, "✅ Transaction added to mempool.", true);
+      elements.transactionForm.reset();
+      document.getElementById("fees").value = "0.1";
+      loadMempool();
+    } else {
+      showResult(elements.txResult, `❌ Error: ${data.error || "Failed to add transaction"}`, false);
     }
+  } catch (error) {
+    showResult(elements.txResult, `❌ Network error: ${error.message}`, false);
+  } finally {
+    hideLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
+  }
+}
+
 
     // Handle balance check
-    async function handleBalanceCheck(e) {
-      e.preventDefault();
-      showLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
-      
-      const address = document.getElementById("address").value;
-      
-      if (!address) {
-        showResult(elements.balanceResult, "❌ Please enter a public key", false);
-        hideLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
-        return;
-      }
+   async function handleBalanceCheck(e) {
+  e.preventDefault();
+  showLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
 
-      try {
-        const res = await fetch(`${API}/solde`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ address })
-});
-        const data = await res.json();
-        console.log("Balance response:", data);
-        if (res.ok) {
-          elements.balanceDisplay.textContent = `${data.balance} UC`;
-          elements.balanceAddress.textContent = address;
-          elements.balanceAddress.title = address;
-        } else {
-          elements.balanceDisplay.textContent = "0.00 UC";
-          showResult(elements.balanceResult, `❌ Error: ${data.error || "Address not found"}`, false);
-        }
-      } catch (error) {
-        showResult(elements.balanceResult, `❌ Network error: ${error.message}`, false);
-      } finally {
-        hideLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
-      }
+  const addressInput = document.getElementById("address");
+  let address = addressInput?.value?.trim();
+
+  // Convert visible \n into real line breaks, if needed
+  if (address.includes("\\n")) {
+    address = address.split("\\n").join("\n");
+  }
+
+  if (!address) {
+    showResult(elements.balanceResult, "❌ Please enter a public key", false);
+    hideLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/solde`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ address })
+    });
+
+    const data = await res.json();
+    console.log("Balance response:", data);
+
+    if (res.ok) {
+      elements.balanceDisplay.textContent = `${data.balance} UC`;
+      elements.balanceAddress.textContent = address;
+      elements.balanceAddress.title = address;
+    } else {
+      elements.balanceDisplay.textContent = "0.00 UC";
+      showResult(elements.balanceResult, `❌ Error: ${data.error || "Address not found"}`, false);
     }
+  } catch (error) {
+    showResult(elements.balanceResult, `❌ Network error: ${error.message}`, false);
+  } finally {
+    hideLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
+  }
+}
+
+
 
     // Load mempool transactions
     async function loadMempool() {
@@ -559,16 +668,10 @@
         if (!jobRes.ok) throw new Error("Failed to get mining job");
         const job = await jobRes.json();
         
-        // Update blockchain height display
-        elements.blockHeight.innerHTML = `Height: ${job.height} | <span class="text-truncate" title="${job.previousHash}">${job.previousHash.slice(0, 10)}...</span>`;
-        
-        // Simulate mining delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
         // Create mined block
         const minedBlock = {
-          previousHash: job.previousHash,
           height: job.height,
+          previousHash: job.previousHash,
           transactions: job.mempool,
           nonce: Math.floor(Math.random() * 1e6),
           timestamp: Date.now(),
@@ -588,6 +691,8 @@
           showResult(elements.mineResult, "✅ Block mined and submitted successfully!", true);
           // Refresh mempool
           loadMempool();
+          // Update blockchain height
+          checkNodeStatus();
         } else {
           showResult(elements.mineResult, `❌ Mining failed: ${data.error || "Unknown error"}`, false);
         }
@@ -598,17 +703,76 @@
       }
     }
 
+    // Create a new wallet
+    async function createWallet() {
+      showLoading(elements.createWalletBtn, elements.walletBtnText, elements.walletSpinner);
+      
+      try {
+        const res = await fetch(`${API}/wallet/create`, {
+          method: "POST"
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+          elements.publicKeyDisplay.textContent = data.publicKey;
+          elements.privateKeyDisplay.textContent = data.privateKey;
+          elements.walletResult.style.display = "block";
+          
+          // Add event listeners to new copy buttons
+          document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', copyToClipboard);
+          });
+        } else {
+          showResult(elements.walletResult, `❌ Error: ${data.error || "Failed to create wallet"}`, false);
+        }
+      } catch (error) {
+        showResult(elements.walletResult, `❌ Network error: ${error.message}`, false);
+      } finally {
+        hideLoading(elements.createWalletBtn, elements.walletBtnText, elements.walletSpinner);
+      }
+    }
+
+    // Copy key to clipboard
+    function copyToClipboard(e) {
+      const keyType = e.target.getAttribute('data-key');
+      const text = keyType === 'public' 
+        ? elements.publicKeyDisplay.textContent 
+        : elements.privateKeyDisplay.textContent;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = e.target.innerHTML;
+        e.target.innerHTML = '<i class="bi bi-check"></i> Copied!';
+        /* setTimeout(() => {
+          e.target.innerHTML = originalText;
+        }, 2000); */
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+
     // Check node status
     async function checkNodeStatus() {
       try {
-        const res = await fetch(`${API}/status`);
-        if (res.ok) {
-          const data = await res.json();
-          elements.nodeStatus.textContent = `Node: ${data.status} | v${data.version}`;
-          elements.blockHeight.textContent = `Height: ${data.height}`;
+        // Check root endpoint for health
+        const healthRes = await fetch(`${API}/`);
+        if (healthRes.ok) {
+          elements.nodeStatus.innerHTML = '<i class="bi bi-circle-fill text-success me-1"></i> Node running';
+        } else {
+          throw new Error('Node not healthy');
+        }
+        
+        // Get latest block for height
+        const latestRes = await fetch(`${API}/blocks/latest`);
+        if (latestRes.ok) {
+          const latestBlock = await latestRes.json();
+          elements.blockHeight.textContent = `Height: ${latestBlock.height || 0}`;
+        } else {
+          elements.blockHeight.textContent = 'Height: 0';
         }
       } catch (error) {
         elements.nodeStatus.innerHTML = '<i class="bi bi-circle-fill text-danger me-1"></i> Node not responding';
+        elements.blockHeight.textContent = 'Height: --';
       }
     }
 
