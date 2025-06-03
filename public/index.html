@@ -6,481 +6,149 @@
   <title>uemfBlockchain Client</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <style>
-    :root {
-      --primary: #6f42c1;
-      --secondary: #6610f2;
-      --dark: #1a1a2e;
-      --light: #f8f9fa;
-      --success: #20c997;
-      --warning: #fd7e14;
-      --danger: #dc3545;
-    }
-    
-    body {
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: var(--light);
-      min-height: 100vh;
-      background-attachment: fixed;
-    }
-        /* New Blockchain Explorer Styles */
-    .blockchain-section {
-      margin-top: 40px;
-      padding-top: 30px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .blockchain-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-    
-    .blockchain-controls {
-      display: flex;
-      gap: 10px;
-    }
-    
-    .blockchain-container {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 30px;
-      max-height: 600px;
-      overflow-y: auto;
-    }
-    
-    .blockchain-visual {
-      position: relative;
-      min-height: 300px;
-      padding: 20px 0;
-    }
-    
-    .block {
-      background: linear-gradient(135deg, #6f42c1, #6610f2);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 20px;
-      position: relative;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .block:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(111, 66, 193, 0.5);
-    }
-    
-    .block.genesis {
-      background: linear-gradient(135deg, #20c997, #1a936f);
-    }
-    
-    .block-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .block-height {
-      font-weight: bold;
-      font-size: 1.2rem;
-      color: white;
-    }
-    
-    .block-hash {
-      font-family: monospace;
-      font-size: 0.8rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    
-    .block-details {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-    
-    .block-detail {
-      font-size: 0.9rem;
-    }
-    
-    .block-detail-label {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 0.8rem;
-    }
-    
-    .block-transactions {
-      margin-top: 15px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .tx-count {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 3px 8px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-    }
-    
-    .chain-line {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: linear-gradient(to bottom, #6f42c1, #20c997);
-      transform: translateX(-50%);
-      z-index: -1;
-    }
-    
-    .block-detail-view {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 20px;
-      display: none;
-    }
-    
-    .block-detail-view.active {
-      display: block;
-    }
-    
-    .detail-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    
-    .detail-section {
-      margin-bottom: 20px;
-    }
-    
-    .detail-label {
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 5px;
-    }
-    
-    .detail-value {
-      font-family: monospace;
-      word-break: break-all;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 8px 12px;
-      border-radius: 8px;
-    }
-    
-    .transactions-list {
-      margin-top: 20px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    
-    .tx-item {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    
-    .tx-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 5px;
-    }
-    
-    .tx-amount {
-      font-weight: bold;
-      color: #20c997;
-    }
-    
-    .tx-parties {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-    }
-    
-    .tx-from, .tx-to {
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    
-    .tx-arrow {
-      margin: 0 10px;
-      color: #6f42c1;
-    }
-    
-    .back-to-chain {
-      margin-bottom: 15px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      color: #6f42c1;
-    }
-    
-    .back-to-chain:hover {
-      color: #8c68d0;
-    }
-    
-    /* Pagination styles */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    
-    .page-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: white;
-      padding: 5px 12px;
-      margin: 0 5px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .page-btn:hover {
-      background: rgba(111, 66, 193, 0.5);
-    }
-    
-    .page-btn.active {
-      background: #6f42c1;
-    }
-    
-    .page-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-       color: #f8f9fa;
-    }
-    .text-muted {
-      color: rgba(255, 255, 255, 0.575) !important;
-    }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-    
-    .card-header {
-      background: rgba(0, 0, 0, 0.2);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      font-weight: 600;
-      padding: 15px 20px;
-      color: #f8f9fa;
-    }
-    
-    .form-control, .form-select {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--light);
-    }
-    
-    .form-control:focus, .form-select:focus {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: var(--primary);
-      box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
-      color: var(--light);
-    }
-    
-    .btn-primary {
-      background: var(--primary);
-      border: none;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-primary:hover {
-      background: var(--secondary);
-      transform: translateY(-2px);
-    }
-    
-    .btn-warning {
-      background: var(--warning);
-      border: none;
-    }
-    
-    .btn-success {
-      background: var(--success);
-      border: none;
-    }
-    
-    .status-badge {
-      font-size: 0.8rem;
-      padding: 5px 10px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.1);
-    }
-    
-    .transaction-item {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-      border-left: 3px solid var(--primary);
-    }
-    
-    .transaction-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateX(5px);
-    }
-    
-    .crypto-icon {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin-right: 15px;
-    }
-    
-    .navbar-brand {
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-    
-    .section-title {
-      position: relative;
-      padding-bottom: 10px;
-      margin-bottom: 25px;
-    }
-    
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 50px;
-      height: 3px;
-      background: var(--primary);
-      border-radius: 3px;
-    }
-    
-    .balance-display {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--success), #1a936f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .spinner {
-      display: inline-block;
-      width: 1rem;
-      height: 1rem;
-      vertical-align: middle;
-      border: 0.2em solid currentColor;
-      border-right-color: transparent;
-      border-radius: 50%;
-      animation: spinner 0.75s linear infinite;
-      margin-left: 8px;
-    }
-    
-    @keyframes spinner {
-      to { transform: rotate(360deg); }
-    }
-    
-    .address-truncate {
-      display: inline-block;
-      max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      vertical-align: bottom;
-    }
-    
-    .mining-animation {
-      display: inline-block;
-      animation: mining-pulse 1.5s infinite;
-    }
-    
-    @keyframes mining-pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    
-    .footer {
-      background: rgba(0, 0, 0, 0.3);
-      padding: 20px 0;
-      margin-top: 40px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    /* New styles for wallet creation */
-    .wallet-card {
-      background: rgba(255, 255, 255, 0.12);
-      border-left: 4px solid var(--success);
-    }
-    
-    .key-display {
-      background: rgba(0, 0, 0, 0.2);
-      padding: 12px;
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 0.85rem;
-      word-break: break-all;
-      position: relative;
-    }
-    
-    .copy-btn {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      padding: 3px 8px;
-      font-size: 0.75rem;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
   <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background: rgba(0, 0, 0, 0.3);">
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand d-flex align-items-center" href="#">
+      <a class="navbar-brand d-flex align-items-center" href="#" data-page="dashboard">
         <div class="crypto-icon me-2">
           <i class="bi bi-currency-bitcoin"></i>
         </div>
         uemfBlockchain
       </a>
-      <div class="d-flex">
-        <div class="status-badge me-3">
-          <i class="bi bi-circle-fill text-success me-1"></i>
-          <span id="nodeStatus">Connected to Node</span>
-        </div>
-        <div class="status-badge">
-          <i class="bi bi-hdd-stack me-1"></i>
-          <span id="blockHeight">Loading...</span>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-page="dashboard">
+              <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="wallet">
+              <i class="bi bi-wallet2"></i> Wallet
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="transactions">
+              <i class="bi bi-send"></i> Transactions
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="mining">
+              <i class="bi bi-cpu"></i> Mining
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="explorer">
+              <i class="bi bi-link-45deg"></i> Explorer
+            </a>
+          </li>
+        </ul>
+        
+        <div class="d-flex">
+          <div class="status-badge me-3">
+            <i class="bi bi-circle-fill text-success me-1"></i>
+            <span id="nodeStatus">Connected to Node</span>
+          </div>
+          <div class="status-badge">
+            <i class="bi bi-hdd-stack me-1"></i>
+            <span id="blockHeight">Loading...</span>
+          </div>
         </div>
       </div>
     </div>
   </nav>
 
-  <div class="container py-5">
+  <!-- Dashboard Page -->
+  <div class="container page-container active" id="dashboard-page">
     <div class="text-center mb-5">
-      <h1 class="display-4 fw-bold mb-3">uemfBlockchain Client</h1>
-      <p class="lead">Manage transactions, check balances, and interact with the uemf blockchain network</p>
+      <h1 class="display-4 fw-bold mb-3">uemfBlockchain Dashboard</h1>
+      <p class="lead">Overview of the uemf blockchain network</p>
     </div>
-
+    
     <div class="row">
-      <!-- Left Column -->
+      <div class="col-md-6">
+        <!-- Network Status Card -->
+        <div class="card">
+          <div class="card-header d-flex align-items-center">
+            <i class="bi bi-hdd-network me-2"></i>
+            Network Status
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Network</div>
+                <div>uemfBlockchain</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Consensus</div>
+                <div>Proof of Work (PoW)</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Block Time</div>
+                <div>~60 seconds</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Coin Symbol</div>
+                <div>uemfCoin (UC)</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Port</div>
+                <div>3000</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Version</div>
+                <div>1.0.0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <!-- Quick Actions Card -->
+        <div class="card">
+          <div class="card-header d-flex align-items-center">
+            <i class="bi bi-lightning-charge me-2"></i>
+            Quick Actions
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <a href="#" class="btn btn-primary" data-page="wallet">
+                <i class="bi bi-wallet2 me-1"></i> Create Wallet
+              </a>
+              <a href="#" class="btn btn-success" data-page="transactions">
+                <i class="bi bi-send me-1"></i> Send Transaction
+              </a>
+              <a href="#" class="btn btn-warning" data-page="mining">
+                <i class="bi bi-cpu me-1"></i> Mine Block
+              </a>
+              <a href="#" class="btn btn-info" data-page="explorer">
+                <i class="bi bi-link-45deg me-1"></i> Explore Blockchain
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wallet Page -->
+  <div class="container page-container" id="wallet-page">
+    <div class="text-center mb-5">
+      <h1 class="display-4 fw-bold mb-3">Wallet Management</h1>
+      <p class="lead">Create and manage your blockchain wallets</p>
+    </div>
+    
+    <div class="row">
       <div class="col-lg-6">
         <!-- Wallet Creation -->
         <div class="card wallet-card mb-4">
@@ -491,7 +159,7 @@
           <div class="card-body">
             <div class="mb-3">
               <p>Create a new wallet to start transacting on the uemf blockchain.</p>
-              <button id="createWalletBtn" class="btn btn-primary w-100">
+              <button id="createWalletBtn" class="btn btn-primary w-100" type="button">
                 <i class="bi bi-plus-circle me-1"></i>
                 <span id="createWalletBtnText">Create New Wallet</span>
                 <span id="walletSpinner" class="spinner" style="display: none;"></span>
@@ -527,7 +195,9 @@
             </div>
           </div>
         </div>
-
+      </div>
+      
+      <div class="col-lg-6">
         <!-- Wallet Balance Checker -->
         <div class="card mb-4">
           <div class="card-header d-flex align-items-center">
@@ -558,7 +228,19 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Transactions Page -->
+  <div class="container page-container" id="transactions-page">
+    <div class="text-center mb-5">
+      <h1 class="display-4 fw-bold mb-3">Transactions</h1>
+      <p class="lead">Create and send transactions on the uemf blockchain</p>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-6">
         <!-- Send Transaction -->
         <div class="card mb-4">
           <div class="card-header d-flex align-items-center">
@@ -599,8 +281,7 @@
           </div>
         </div>
       </div>
-
-      <!-- Right Column -->
+      
       <div class="col-lg-6">
         <!-- Mempool Viewer -->
         <div class="card mb-4">
@@ -626,7 +307,19 @@
             <div id="mempoolList" class="overflow-auto" style="max-height: 300px;"></div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Mining Page -->
+  <div class="container page-container" id="mining-page">
+    <div class="text-center mb-5">
+      <h1 class="display-4 fw-bold mb-3">Block Mining</h1>
+      <p class="lead">Mine new blocks and earn rewards</p>
+    </div>
+    
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
         <!-- Mining Block -->
         <div class="card mb-4">
           <div class="card-header d-flex align-items-center">
@@ -649,50 +342,19 @@
             <div id="mineResult" class="mt-3 alert" style="display: none;"></div>
           </div>
         </div>
-
-        <!-- Blockchain Info -->
-        <div class="card">
-          <div class="card-header d-flex align-items-center">
-            <i class="bi bi-info-circle me-2"></i>
-            Blockchain Information
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Network</div>
-                <div>uemfBlockchain</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Consensus</div>
-                <div>Proof of Work (PoW)</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Block Time</div>
-                <div>~60 seconds</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Coin Symbol</div>
-                <div>uemfCoin (UC)</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Port</div>
-                <div>3000</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Version</div>
-                <div>1.0.0</div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- Blockchain Explorer Section -->
-  <div class="container blockchain-section">
+  <!-- Blockchain Explorer Page -->
+  <div class="container page-container" id="explorer-page">
+    <div class="text-center mb-5">
+      <h1 class="display-4 fw-bold mb-3">Blockchain Explorer</h1>
+      <p class="lead">Explore the uemf blockchain network</p>
+    </div>
+    
     <div class="blockchain-header">
-      <h2><i class="bi bi-link-45deg me-2"></i> Blockchain Explorer</h2>
+      <h2><i class="bi bi-link-45deg me-2"></i> Blockchain</h2>
       <div class="blockchain-controls">
         <button id="refreshBlockchainBtn" class="btn btn-outline-light">
           <i class="bi bi-arrow-repeat"></i> Refresh
@@ -791,594 +453,6 @@
       </div>
     </div>
   </footer>
-
-  <script>
-    const API = "http://localhost:3000"; // change if hosted elsewhere
-    
-    // DOM Elements
-    const elements = {
-      transactionForm: document.getElementById("transactionForm"),
-      balanceForm: document.getElementById("balanceForm"),
-      refreshMempoolBtn: document.getElementById("refreshMempoolBtn"),
-      mineBtn: document.getElementById("mineBtn"),
-      txResult: document.getElementById("txResult"),
-      balanceResult: document.getElementById("balanceResult"),
-      mineResult: document.getElementById("mineResult"),
-      mempoolList: document.getElementById("mempoolList"),
-      mempoolEmpty: document.getElementById("mempoolEmpty"),
-      mempoolCount: document.getElementById("mempoolCount"),
-      balanceDisplay: document.querySelector('.balance-display'),
-      balanceAddress: document.getElementById("balanceAddress"),
-      blockHeight: document.getElementById("blockHeight"),
-      nodeStatus: document.getElementById("nodeStatus"),
-      apiEndpoint: document.getElementById("apiEndpoint"),
-      createWalletBtn: document.getElementById("createWalletBtn"),
-      walletResult: document.getElementById("walletResult"),
-      publicKeyDisplay: document.getElementById("publicKeyDisplay"),
-      privateKeyDisplay: document.getElementById("privateKeyDisplay"),
-      
-      // Buttons with spinners
-      txBtn: document.getElementById("txBtn"),
-      txBtnText: document.getElementById("txBtnText"),
-      txSpinner: document.getElementById("txSpinner"),
-      balanceBtn: document.getElementById("balanceBtn"),
-      balanceBtnText: document.getElementById("balanceBtnText"),
-      balanceSpinner: document.getElementById("balanceSpinner"),
-      mineBtnText: document.getElementById("mineBtnText"),
-      mineSpinner: document.getElementById("mineSpinner"),
-      walletBtnText: document.getElementById("createWalletBtnText"),
-      walletSpinner: document.getElementById("walletSpinner")
-    };
-
-    // Initialize the app
-    function init() {
-      // Set the API endpoint display
-      elements.apiEndpoint.textContent = API;
-      
-      // Attach event listeners
-      elements.transactionForm.addEventListener("submit", handleTransactionSubmit);
-      elements.balanceForm.addEventListener("submit", handleBalanceCheck);
-      elements.refreshMempoolBtn.addEventListener("click", loadMempool);
-      elements.mineBtn.addEventListener("click", startMining);
-      elements.createWalletBtn.addEventListener("click", createWallet);
-      
-      // Attach copy event listeners
-      document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.addEventListener('click', copyToClipboard);
-      });
-      
-      // Load initial data
-      loadMempool();
-      checkNodeStatus();
-    }
-
-    // Handle transaction submission
-    async function handleTransactionSubmit(e) {
-  e.preventDefault();
-  showLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
-
-  let sender = document.getElementById("sender").value.trim();
-  let receiver = document.getElementById("receiver").value.trim();
-
-  // Convert escaped \n to real line breaks if needed
-  if (sender.includes("\\n")) sender = sender.split("\\n").join("\n");
-  if (receiver.includes("\\n")) receiver = receiver.split("\\n").join("\n");
-
-  const tx = {
-    sender,
-    receiver,
-    amount: parseFloat(document.getElementById("amount").value),
-    fees: parseFloat(document.getElementById("fees").value),
-    signature: document.getElementById("signature").value
-  };
-
-  try {
-    const res = await fetch(`${API}/addTransaction`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(tx)
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      showResult(elements.txResult, "✅ Transaction added to mempool.", true);
-      elements.transactionForm.reset();
-      document.getElementById("fees").value = "0.1";
-      loadMempool();
-    } else {
-      showResult(elements.txResult, `❌ Error: ${data.error || "Failed to add transaction"}`, false);
-    }
-  } catch (error) {
-    showResult(elements.txResult, `❌ Network error: ${error.message}`, false);
-  } finally {
-    hideLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
-  }
-}
-
-
-    // Handle balance check
-   async function handleBalanceCheck(e) {
-  e.preventDefault();
-  showLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
-
-  const addressInput = document.getElementById("address");
-  let address = addressInput?.value?.trim();
-
-  // Convert visible \n into real line breaks, if needed
-  if (address.includes("\\n")) {
-    address = address.split("\\n").join("\n");
-  }
-
-  if (!address) {
-    showResult(elements.balanceResult, "❌ Please enter a public key", false);
-    hideLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
-    return;
-  }
-
-  try {
-    const res = await fetch(`${API}/solde`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ address })
-    });
-
-    const data = await res.json();
-    console.log("Balance response:", data);
-
-    if (res.ok) {
-      elements.balanceDisplay.textContent = `${data.balance} UC`;
-      elements.balanceAddress.textContent = address;
-      elements.balanceAddress.title = address;
-    } else {
-      elements.balanceDisplay.textContent = "0.00 UC";
-      showResult(elements.balanceResult, `❌ Error: ${data.error || "Address not found"}`, false);
-    }
-  } catch (error) {
-    showResult(elements.balanceResult, `❌ Network error: ${error.message}`, false);
-  } finally {
-    hideLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
-  }
-}
-
-
-
-    // Load mempool transactions
-    async function loadMempool() {
-      try {
-        const res = await fetch(`${API}/mempool`);
-        const mempool = await res.json();
-        
-        elements.mempoolList.innerHTML = "";
-        
-        if (mempool.length === 0) {
-          elements.mempoolEmpty.style.display = "block";
-          elements.mempoolCount.textContent = "0";
-          return;
-        }
-        
-        elements.mempoolEmpty.style.display = "none";
-        elements.mempoolCount.textContent = mempool.length;
-        
-        mempool.forEach(tx => {
-          const txElement = document.createElement("div");
-          txElement.className = "transaction-item";
-          txElement.innerHTML = `
-            <div class="d-flex justify-content-between">
-              <div>
-                <div class="fw-bold">${tx.amount} UC</div>
-                <div class="small text-muted">Fee: ${tx.fees} UC</div>
-              </div>
-              <div class="text-end">
-                <div class="small"><span class="text-primary">From:</span> <span class="address-truncate" title="${tx.sender}">${tx.sender.slice(0, 10)}...${tx.sender.slice(-8)}</span></div>
-                <div class="small"><span class="text-success">To:</span> <span class="address-truncate" title="${tx.receiver}">${tx.receiver.slice(0, 10)}...${tx.receiver.slice(-8)}</span></div>
-              </div>
-            </div>
-          `;
-          elements.mempoolList.appendChild(txElement);
-        });
-      } catch (error) {
-        console.error("Error loading mempool:", error);
-      }
-    }
-
-    // Start mining process
-    async function startMining() {
-      showLoading(elements.mineBtn, elements.mineBtnText, elements.mineSpinner);
-      
-      const minerAddress = document.getElementById("minerAddress").value || "demo_miner";
-      
-      try {
-        // Get mining job
-        const jobRes = await fetch(`${API}/getMiningJob`);
-        if (!jobRes.ok) throw new Error("Failed to get mining job");
-        const job = await jobRes.json();
-        
-        // Create mined block
-        const minedBlock = {
-          height: job.height,
-          previousHash: job.previousHash,
-          transactions: job.mempool,
-          nonce: Math.floor(Math.random() * 1e6),
-          timestamp: Date.now(),
-          miner: minerAddress
-        };
-
-        // Submit mined block
-        const submitRes = await fetch(`${API}/submitBlock`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ block: minedBlock })
-        });
-        
-        const data = await submitRes.json();
-        
-        if (submitRes.ok) {
-          showResult(elements.mineResult, "✅ Block mined and submitted successfully!", true);
-          // Refresh mempool
-          loadMempool();
-          // Update blockchain height
-          checkNodeStatus();
-        } else {
-          showResult(elements.mineResult, `❌ Mining failed: ${data.error || "Unknown error"}`, false);
-        }
-      } catch (error) {
-        showResult(elements.mineResult, `❌ Error: ${error.message}`, false);
-      } finally {
-        hideLoading(elements.mineBtn, elements.mineBtnText, elements.mineSpinner);
-      }
-    }
-
-    // Create a new wallet
-    async function createWallet() {
-      showLoading(elements.createWalletBtn, elements.walletBtnText, elements.walletSpinner);
-      
-      try {
-        const res = await fetch(`${API}/wallet/create`, {
-          method: "POST"
-        });
-        
-        const data = await res.json();
-        
-        if (res.ok) {
-          elements.publicKeyDisplay.textContent = data.publicKey;
-          elements.privateKeyDisplay.textContent = data.privateKey;
-          elements.walletResult.style.display = "block";
-          
-          // Add event listeners to new copy buttons
-          document.querySelectorAll('.copy-btn').forEach(btn => {
-            btn.addEventListener('click', copyToClipboard);
-          });
-        } else {
-          showResult(elements.walletResult, `❌ Error: ${data.error || "Failed to create wallet"}`, false);
-        }
-      } catch (error) {
-        showResult(elements.walletResult, `❌ Network error: ${error.message}`, false);
-      } finally {
-        hideLoading(elements.createWalletBtn, elements.walletBtnText, elements.walletSpinner);
-      }
-    }
-
-    // Copy key to clipboard
-    function copyToClipboard(e) {
-      const keyType = e.target.getAttribute('data-key');
-      const text = keyType === 'public' 
-        ? elements.publicKeyDisplay.textContent 
-        : elements.privateKeyDisplay.textContent;
-      
-      navigator.clipboard.writeText(text).then(() => {
-        const originalText = e.target.innerHTML;
-        e.target.innerHTML = '<i class="bi bi-check"></i> Copied!';
-        /* setTimeout(() => {
-          e.target.innerHTML = originalText;
-        }, 2000); */
-      }).catch(err => {
-        console.error('Failed to copy: ', err);
-      });
-    }
-
-    // Check node status
-    async function checkNodeStatus() {
-      try {
-        // Check root endpoint for health
-        const healthRes = await fetch(`${API}/`);
-        if (healthRes.ok) {
-          elements.nodeStatus.innerHTML = '<i class="bi bi-circle-fill text-success me-1"></i> Node running';
-        } else {
-          throw new Error('Node not healthy');
-        }
-        
-        // Get latest block for height
-        const latestRes = await fetch(`${API}/blocks/latest`);
-        if (latestRes.ok) {
-          const latestBlock = await latestRes.json();
-          elements.blockHeight.textContent = `Height: ${latestBlock.height || 0}`;
-        } else {
-          elements.blockHeight.textContent = 'Height: 0';
-        }
-      } catch (error) {
-        elements.nodeStatus.innerHTML = '<i class="bi bi-circle-fill text-danger me-1"></i> Node not responding';
-        elements.blockHeight.textContent = 'Height: --';
-      }
-    }
-
-    // Show loading state
-    function showLoading(button, buttonText, spinner) {
-      button.disabled = true;
-      buttonText.textContent = buttonText.textContent.replace("...", "");
-      spinner.style.display = "inline-block";
-    }
-
-    // Hide loading state
-    function hideLoading(button, buttonText, spinner) {
-      button.disabled = false;
-      spinner.style.display = "none";
-    }
-
-    // Show result message
-    function showResult(element, message, isSuccess) {
-      element.textContent = message;
-      element.className = isSuccess ? "mt-3 alert alert-success" : "mt-3 alert alert-danger";
-      element.style.display = "block";
-      
-      // Auto-hide success messages after 5 seconds
-      if (isSuccess) {
-        setTimeout(() => {
-          element.style.display = "none";
-        }, 5000);
-      }
-    }
-
-    // Initialize the application
-    document.addEventListener("DOMContentLoaded", init);
-
-    // Blockchain Explorer Variables
-    const BLOCKS_PER_PAGE = 5;
-    let currentPage = 1;
-    let totalPages = 1;
-    let allBlocks = [];
-
-    // DOM Elements for Blockchain Explorer
-    const blockchainElements = {
-      blockchainVisual: document.getElementById('blockchainVisual'),
-      blocksContainer: document.getElementById('blocksContainer'),
-      blockDetailView: document.getElementById('blockDetailView'),
-      backToChainBtn: document.getElementById('backToChainBtn'),
-      refreshBlockchainBtn: document.getElementById('refreshBlockchainBtn'),
-      detailHeight: document.getElementById('detailHeight'),
-      detailHash: document.getElementById('detailHash'),
-      detailPreviousHash: document.getElementById('detailPreviousHash'),
-      detailTimestamp: document.getElementById('detailTimestamp'),
-      detailDifficulty: document.getElementById('detailDifficulty'),
-      detailBlockReward: document.getElementById('detailBlockReward'),
-      detailNonce: document.getElementById('detailNonce'),
-      detailMiner: document.getElementById('detailMiner'),
-      transactionsList: document.getElementById('transactionsList'),
-      txCount: document.getElementById('txCount'),
-      pagination: document.getElementById('pagination'),
-      prevPageBtn: document.getElementById('prevPageBtn'),
-      nextPageBtn: document.getElementById('nextPageBtn'),
-      pageInfo: document.getElementById('pageInfo'),
-      blockSearch: document.getElementById('blockSearch'),
-      searchBlockBtn: document.getElementById('searchBlockBtn')
-    };
-
-    // Initialize Blockchain Explorer
-    function initBlockchainExplorer() {
-      // Load blockchain data
-      loadBlockchain();
-      
-      // Attach event listeners
-      blockchainElements.refreshBlockchainBtn.addEventListener('click', loadBlockchain);
-      blockchainElements.backToChainBtn.addEventListener('click', () => {
-        blockchainElements.blockDetailView.classList.remove('active');
-      });
-      blockchainElements.prevPageBtn.addEventListener('click', () => changePage(-1));
-      blockchainElements.nextPageBtn.addEventListener('click', () => changePage(1));
-      blockchainElements.searchBlockBtn.addEventListener('click', searchBlock);
-    }
-
-    // Load blockchain data
-    async function loadBlockchain() {
-      try {
-        const res = await fetch(`${API}/blocks`);
-        allBlocks = await res.json();
-        
-        // Sort blocks by height descending (latest first)
-        allBlocks.sort((a, b) => b.height - a.height);
-        
-        totalPages = Math.ceil(allBlocks.length / BLOCKS_PER_PAGE);
-        currentPage = 1;
-        
-        renderBlocks();
-        updatePagination();
-      } catch (error) {
-        console.error('Failed to load blockchain:', error);
-        blockchainElements.blocksContainer.innerHTML = `
-          <div class="alert alert-danger">Failed to load blockchain data</div>
-        `;
-      }
-    }
-
-    // Render blocks for current page
-    function renderBlocks() {
-      blockchainElements.blocksContainer.innerHTML = '';
-      
-      const startIndex = (currentPage - 1) * BLOCKS_PER_PAGE;
-      const endIndex = Math.min(startIndex + BLOCKS_PER_PAGE, allBlocks.length);
-      const blocksToShow = allBlocks.slice(startIndex, endIndex);
-      
-      if (blocksToShow.length === 0) {
-        blockchainElements.blocksContainer.innerHTML = `
-          <div class="text-center py-5">
-            <i class="bi bi-inbox fs-1 text-muted"></i>
-            <p class="mt-2">No blocks found</p>
-          </div>
-        `;
-        return;
-      }
-      
-      blocksToShow.forEach(block => {
-        const blockEl = document.createElement('div');
-        blockEl.className = `block ${block.height === 0 ? 'genesis' : ''}`;
-        blockEl.dataset.height = block.height;
-        
-        // Format timestamp
-        const timestamp = new Date(block.timestamp).toLocaleString();
-        
-        blockEl.innerHTML = `
-          <div class="block-header">
-            <div class="block-height">Block #${block.height}</div>
-            <div class="block-hash" title="${block.hash}">${truncateHash(block.hash)}</div>
-          </div>
-          
-          <div class="block-details">
-            <div class="block-detail">
-              <div class="block-detail-label">Timestamp</div>
-              <div>${timestamp}</div>
-            </div>
-            <div class="block-detail">
-              <div class="block-detail-label">Miner</div>
-              <div>${truncateHash(block.miner || 'Unknown')}</div>
-            </div>
-            <div class="block-detail">
-              <div class="block-detail-label">Transactions</div>
-              <div>${block.transactions.length}</div>
-            </div>
-            <div class="block-detail">
-              <div class="block-detail-label">Difficulty</div>
-              <div>${block.difficulty}</div>
-            </div>
-          </div>
-          
-          <div class="block-transactions">
-            <span class="tx-count">${block.transactions.length} TX</span>
-          </div>
-        `;
-        
-        blockEl.addEventListener('click', () => showBlockDetail(block));
-        blockchainElements.blocksContainer.appendChild(blockEl);
-      });
-    }
-
-    // Show block detail view
-    function showBlockDetail(block) {
-      blockchainElements.blockDetailView.classList.add('active');
-      
-      // Format timestamp
-      const timestamp = new Date(block.timestamp).toLocaleString();
-      
-      // Set block details
-      blockchainElements.detailHeight.textContent = block.height;
-      blockchainElements.detailHash.textContent = block.hash;
-      blockchainElements.detailPreviousHash.textContent = block.previousHash || 'Genesis Block';
-      blockchainElements.detailTimestamp.textContent = timestamp;
-      blockchainElements.detailDifficulty.textContent = block.difficulty;
-      blockchainElements.detailBlockReward.textContent = `${block.blockReward} UC`;
-      blockchainElements.detailNonce.textContent = block.nonce;
-      blockchainElements.detailMiner.textContent = block.miner || 'Unknown';
-      
-      // Set transaction count
-      blockchainElements.txCount.textContent = block.transactions.length;
-      
-      // Render transactions
-      blockchainElements.transactionsList.innerHTML = '';
-      
-      if (block.transactions.length === 0) {
-        blockchainElements.transactionsList.innerHTML = `
-          <div class="alert alert-info">No transactions in this block</div>
-        `;
-      } else {
-        block.transactions.forEach(tx => {
-          console.log("Transaction:", tx);
-          const txEl = document.createElement('div');
-          txEl.className = 'tx-item';
-          
-          txEl.innerHTML = `
-            <div class="tx-header">
-              <div class="tx-amount">${tx.amount} UC</div>
-              <div class="text-muted">Fee: ${tx.fees} UC</div>
-            </div>
-            <div class="tx-parties">
-              <div class="tx-from" title="${tx.sender}">From: ${truncateHash(tx.sender)}</div>
-              <div class="tx-arrow"><i class="bi bi-arrow-right"></i></div>
-              <div class="tx-to" title="${tx.receiver}">To: ${truncateHash(tx.receiver)}</div>
-            </div>
-          `;
-          
-          blockchainElements.transactionsList.appendChild(txEl);
-        });
-      }
-      
-      // Scroll to detail view
-      blockchainElements.blockDetailView.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Helper function to truncate hashes
-    function truncateHash(hash, startLength = 6, endLength = 4) {
-      if (!hash || hash.length <= startLength + endLength) return hash;
-      return `${hash.substring(0, startLength)}...${hash.substring(hash.length - endLength)}`;
-    }
-
-    // Change page
-    function changePage(direction) {
-      const newPage = currentPage + direction;
-      
-      if (newPage < 1 || newPage > totalPages) return;
-      
-      currentPage = newPage;
-      renderBlocks();
-      updatePagination();
-    }
-
-    // Update pagination controls
-    function updatePagination() {
-      blockchainElements.pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-      blockchainElements.prevPageBtn.disabled = currentPage === 1;
-      blockchainElements.nextPageBtn.disabled = currentPage === totalPages;
-    }
-
-    // Search for a block by height or hash
-    function searchBlock() {
-      const searchTerm = blockchainElements.blockSearch.value.trim();
-      
-      if (!searchTerm) {
-        loadBlockchain();
-        return;
-      }
-      
-      // Try to parse as number (height)
-      const height = parseInt(searchTerm);
-      
-      if (!isNaN(height)) {
-        const block = allBlocks.find(b => b.height === height);
-        if (block) {
-          showBlockDetail(block);
-          return;
-        }
-      }
-      
-      // Search by hash
-      const block = allBlocks.find(b => 
-        b.hash.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        b.previousHash.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      
-      if (block) {
-        showBlockDetail(block);
-      } else {
-        alert('Block not found');
-      }
-    }
-
-    // Initialize the application
-    document.addEventListener("DOMContentLoaded", () => {
-      init();
-      initBlockchainExplorer();
-    });
-
-  </script>
+<script src="script.js"></script>
 </body>
 </html>
