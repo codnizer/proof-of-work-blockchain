@@ -1,0 +1,20 @@
+{
+  "height": 0,
+  "hash": "9b49bec1e19ac3ab2d73adc1031e96f91fd52f7d3cfb9a2e483318b0ad98149b",
+  "previousHash": "0",
+  "timestamp": 1748948696843,
+  "difficulty": 6,
+  "blockReward": 50,
+  "nonce": 0,
+  "blockchain": "uemf",
+  "transactions": [
+    {
+      "signature": "abc123signature",
+      "fees": 0.5,
+      "amount": 10,
+      "sender": "pubkey2",
+      "receiver": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0dQ8Vf08qndht6SjlDPd\n6c9MXD6nRNdNms0JFYVC340pc1IauQGrqSNTCT9eObW1MqpOB74IDhUNO884S9Gq\n/K8QrPyxgqQJ1JrAb8iX/iQK3PkORhZYhMypnQsEApSKZSK6GCDs06qzb+mMfFzG\n7WgHNhV5MxkIRyz7zqbCVYNLbw2K/VeRmnZLohBuTKegvAU7u+G4DmwMVeplNbjJ\nVpXx4xOqDVkBw9VmL7XhKPTeY4pHDrrOUJ3HT5D8HaeqDfyGT6nr9eB6em+gDdBL\nGsFAMvkl32KfF9+0a2A48Yxj77yfO/tF/iahFl7ZBRXtK31xxujoOhl94eteJmcn\n/QIDAQAB\n-----END PUBLIC KEY-----\n"
+    }
+  ],
+  "miner": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw+GBiNvep3CwCaFQWw3q\ne38yp3c2GFWCynCtNnHVtDvI9nNhoN5ym9UnHemexBDujcvH5h7dg/CtFxxVycjH\nAQenXK8bV2FboXWpSk5H0lB6Jkz0qdg80KtGinLl39NIdESrKcCKrPndiwZHs96+\niYXpvuZUvFqLdavcbE0WgrvpBiraiF6bfsp4NHJsdSNqCsf0lbS47Kv+obXFg1Hz\nKi/Gj6pyoVkdXblcGy96W6TEfDfe7AUwLzVsPGxTs6bU8mBYAnAYgZVvxbbWPM7n\nyLyTEOukyz1TRXt9j2G3yFrtKUUKKYNVZvUedXGitwunPgF1wZ58GGhoBVqMDOIO\nzQIDAQAB\n-----END PUBLIC KEY-----\n"
+}
