@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>uemfBlockchain Client</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --primary: #6f42c1;
+      --secondary: #6610f2;
+      --dark: #1a1a2e;
+      --light: #f8f9fa;
+      --success: #20c997;
+      --warning: #fd7e14;
+      --danger: #dc3545;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: var(--light);
+      min-height: 100vh;
+      background-attachment: fixed;
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-header {
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+      padding: 15px 20px;
+    }
+    
+    .form-control, .form-select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--light);
+    }
+    
+    .form-control:focus, .form-select:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+      color: var(--light);
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      border: none;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+    
+    .btn-warning {
+      background: var(--warning);
+      border: none;
+    }
+    
+    .btn-success {
+      background: var(--success);
+      border: none;
+    }
+    
+    .status-badge {
+      font-size: 0.8rem;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .transaction-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .transaction-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+    
+    .crypto-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-right: 15px;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    
+    .section-title {
+      position: relative;
+      padding-bottom: 10px;
+      margin-bottom: 25px;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+    
+    .balance-display {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--success), #1a936f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      vertical-align: middle;
+      border: 0.2em solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spinner 0.75s linear infinite;
+      margin-left: 8px;
+    }
+    
+    @keyframes spinner {
+      to { transform: rotate(360deg); }
+    }
+    
+    .address-truncate {
+      display: inline-block;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+    }
+    
+    .mining-animation {
+      display: inline-block;
+      animation: mining-pulse 1.5s infinite;
+    }
+    
+    @keyframes mining-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .footer {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px 0;
+      margin-top: 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background: rgba(0, 0, 0, 0.3);">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <div class="crypto-icon me-2">
+          <i class="bi bi-currency-bitcoin"></i>
+        </div>
+        uemfBlockchain
+      </a>
+      <div class="d-flex">
+        <div class="status-badge me-3">
+          <i class="bi bi-circle-fill text-success me-1"></i>
+          <span id="nodeStatus">Connected to Node</span>
+        </div>
+        <div class="status-badge">
+          <i class="bi bi-hdd-stack me-1"></i>
+          <span id="blockHeight">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <h1 class="display-4 fw-bold mb-3">uemfBlockchain Client</h1>
+      <p class="lead">Manage transactions, check balances, and interact with the uemf blockchain network</p>
+    </div>
+
+    <div class="row">
+      <!-- Left Column -->
+      <div class="col-lg-6">
+        <!-- Wallet Balance Checker -->
+        <div class="card mb-4">
+          <div class="card-header d-flex align-items-center">
+            <i class="bi bi-wallet2 me-2"></i>
+            Wallet Balance
+          </div>
+          <div class="card-body">
+            <form id="balanceForm" class="row g-3">
+              <div class="col-md-8">
+                <input type="text" class="form-control" id="address" placeholder="Enter public key" required>
+              </div>
+              <div class="col-md-4">
+                <button type="submit" class="btn btn-success w-100" id="balanceBtn">
+                  <span id="balanceBtnText">Check Balance</span>
+                  <span id="balanceSpinner" class="spinner" style="display: none;"></span>
+                </button>
+              </div>
+            </form>
+            <div class="mt-4 text-center" id="balanceResult">
+              <div class="d-flex justify-content-center align-items-center">
+                <i class="bi bi-wallet2 me-2 fs-3"></i>
+                <div>
+                  <div class="text-muted small">uemfCoin Balance</div>
+                  <div class="balance-display">--.--</div>
+                </div>
+              </div>
+              <div class="mt-2 small text-muted">Public Key: <span id="balanceAddress" class="address-truncate">None</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Send Transaction -->
+        <div class="card mb-4">
+          <div class="card-header d-flex align-items-center">
+            <i class="bi bi-send me-2"></i>
+            Create & Send Transaction
+          </div>
+          <div class="card-body">
+            <form id="transactionForm">
+              <div class="mb-3">
+                <label for="sender" class="form-label">Sender Public Key</label>
+                <input type="text" class="form-control" id="sender" required>
+              </div>
+              <div class="mb-3">
+                <label for="receiver" class="form-label">Receiver Address</label>
+                <input type="text" class="form-control" id="receiver" required>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="amount" class="form-label">Amount (uemfCoin)</label>
+                  <input type="number" class="form-control" id="amount" min="0.01" step="0.01" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="fees" class="form-label">Transaction Fee</label>
+                  <input type="number" class="form-control" id="fees" min="0.01" step="0.01" value="0.1" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="signature" class="form-label">Signature</label>
+                <textarea class="form-control" id="signature" rows="2" placeholder="Enter transaction signature" required></textarea>
+                <div class="form-text">Sign your transaction before submitting</div>
+              </div>
+              <button type="submit" class="btn btn-primary w-100" id="txBtn">
+                <span id="txBtnText">Submit Transaction</span>
+                <span id="txSpinner" class="spinner" style="display: none;"></span>
+              </button>
+            </form>
+            <div id="txResult" class="mt-3 alert" style="display: none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-lg-6">
+        <!-- Mempool Viewer -->
+        <div class="card mb-4">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-collection me-2"></i>
+              Mempool
+            </div>
+            <div>
+              <span class="badge bg-primary me-2" id="mempoolCount">0</span>
+              <button class="btn btn-outline-light btn-sm" id="refreshMempoolBtn">
+                <i class="bi bi-arrow-repeat"></i> Refresh
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="mb-3" id="mempoolEmpty" style="display: none;">
+              <div class="text-center py-4">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <p class="mt-2">Mempool is empty</p>
+              </div>
+            </div>
+            <div id="mempoolList" class="overflow-auto" style="max-height: 300px;"></div>
+          </div>
+        </div>
+
+        <!-- Mining Block -->
+        <div class="card mb-4">
+          <div class="card-header d-flex align-items-center">
+            <i class="bi bi-cpu me-2"></i>
+            Manual Mining
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <p>Mine a new block and add pending transactions from the mempool to the blockchain.</p>
+              <div class="d-flex align-items-center mb-3">
+                <div class="me-2">Miner Address:</div>
+                <input type="text" class="form-control form-control-sm w-50" id="minerAddress" placeholder="Enter miner address" value="demo_miner">
+              </div>
+            </div>
+            <button class="btn btn-warning w-100" id="mineBtn">
+              <span class="mining-animation">🛠️</span> 
+              <span id="mineBtnText">Mine New Block</span>
+              <span id="mineSpinner" class="spinner" style="display: none;"></span>
+            </button>
+            <div id="mineResult" class="mt-3 alert" style="display: none;"></div>
+          </div>
+        </div>
+
+        <!-- Blockchain Info -->
+        <div class="card">
+          <div class="card-header d-flex align-items-center">
+            <i class="bi bi-info-circle me-2"></i>
+            Blockchain Information
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Network</div>
+                <div>uemfBlockchain</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Consensus</div>
+                <div>Proof of Work (PoW)</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Block Time</div>
+                <div>~60 seconds</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-muted small">Coin Symbol</div>
+                <div>uemfCoin (UC)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>uemfBlockchain Client</h5>
+          <p class="mb-0">A user interface for interacting with the uemf blockchain network.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <div class="text-muted small">Connected to: <span id="apiEndpoint">http://localhost:3000</span></div>
+          <div class="text-muted small mt-1">v1.0.0</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const API = "http://localhost:3000"; // change if hosted elsewhere
+    
+    // DOM Elements
+    const elements = {
+      transactionForm: document.getElementById("transactionForm"),
+      balanceForm: document.getElementById("balanceForm"),
+      refreshMempoolBtn: document.getElementById("refreshMempoolBtn"),
+      mineBtn: document.getElementById("mineBtn"),
+      txResult: document.getElementById("txResult"),
+      balanceResult: document.getElementById("balanceResult"),
+      mineResult: document.getElementById("mineResult"),
+      mempoolList: document.getElementById("mempoolList"),
+      mempoolEmpty: document.getElementById("mempoolEmpty"),
+      mempoolCount: document.getElementById("mempoolCount"),
+      balanceDisplay: document.querySelector('.balance-display'),
+      balanceAddress: document.getElementById("balanceAddress"),
+      blockHeight: document.getElementById("blockHeight"),
+      nodeStatus: document.getElementById("nodeStatus"),
+      apiEndpoint: document.getElementById("apiEndpoint"),
+      
+      // Buttons with spinners
+      txBtn: document.getElementById("txBtn"),
+      txBtnText: document.getElementById("txBtnText"),
+      txSpinner: document.getElementById("txSpinner"),
+      balanceBtn: document.getElementById("balanceBtn"),
+      balanceBtnText: document.getElementById("balanceBtnText"),
+      balanceSpinner: document.getElementById("balanceSpinner"),
+      mineBtnText: document.getElementById("mineBtnText"),
+      mineSpinner: document.getElementById("mineSpinner")
+    };
+
+    // Initialize the app
+    function init() {
+      // Attach event listeners
+      elements.transactionForm.addEventListener("submit", handleTransactionSubmit);
+      elements.balanceForm.addEventListener("submit", handleBalanceCheck);
+      elements.refreshMempoolBtn.addEventListener("click", loadMempool);
+      elements.mineBtn.addEventListener("click", startMining);
+      
+      // Load initial data
+      loadMempool();
+      checkNodeStatus();
+    }
+
+    // Handle transaction submission
+    async function handleTransactionSubmit(e) {
+      e.preventDefault();
+      showLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
+      
+      const tx = {
+        sender: document.getElementById("sender").value,
+        receiver: document.getElementById("receiver").value,
+        amount: parseFloat(document.getElementById("amount").value),
+        fees: parseFloat(document.getElementById("fees").value),
+        signature: document.getElementById("signature").value
+      };
+
+      try {
+        const res = await fetch(`${API}/addTransaction`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(tx)
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+          showResult(elements.txResult, "✅ Transaction added to mempool.", true);
+          // Clear form
+          elements.transactionForm.reset();
+          document.getElementById("fees").value = "0.1";
+          // Refresh mempool
+          loadMempool();
+        } else {
+          showResult(elements.txResult, `❌ Error: ${data.error || "Failed to add transaction"}`, false);
+        }
+      } catch (error) {
+        showResult(elements.txResult, `❌ Network error: ${error.message}`, false);
+      } finally {
+        hideLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
+      }
+    }
+
+    // Handle balance check
+    async function handleBalanceCheck(e) {
+      e.preventDefault();
+      showLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
+      
+      const address = document.getElementById("address").value;
+      
+      if (!address) {
+        showResult(elements.balanceResult, "❌ Please enter a public key", false);
+        hideLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/solde`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ address })
+});
+        const data = await res.json();
+        console.log("Balance response:", data);
+        if (res.ok) {
+          elements.balanceDisplay.textContent = `${data.balance} UC`;
+          elements.balanceAddress.textContent = address;
+          elements.balanceAddress.title = address;
+        } else {
+          elements.balanceDisplay.textContent = "0.00 UC";
+          showResult(elements.balanceResult, `❌ Error: ${data.error || "Address not found"}`, false);
+        }
+      } catch (error) {
+        showResult(elements.balanceResult, `❌ Network error: ${error.message}`, false);
+      } finally {
+        hideLoading(elements.balanceBtn, elements.balanceBtnText, elements.balanceSpinner);
+      }
+    }
+
+    // Load mempool transactions
+    async function loadMempool() {
+      try {
+        const res = await fetch(`${API}/mempool`);
+        const mempool = await res.json();
+        
+        elements.mempoolList.innerHTML = "";
+        
+        if (mempool.length === 0) {
+          elements.mempoolEmpty.style.display = "block";
+          elements.mempoolCount.textContent = "0";
+          return;
+        }
+        
+        elements.mempoolEmpty.style.display = "none";
+        elements.mempoolCount.textContent = mempool.length;
+        
+        mempool.forEach(tx => {
+          const txElement = document.createElement("div");
+          txElement.className = "transaction-item";
+          txElement.innerHTML = `
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="fw-bold">${tx.amount} UC</div>
+                <div class="small text-muted">Fee: ${tx.fees} UC</div>
+              </div>
+              <div class="text-end">
+                <div class="small"><span class="text-primary">From:</span> <span class="address-truncate" title="${tx.sender}">${tx.sender.slice(0, 10)}...${tx.sender.slice(-8)}</span></div>
+                <div class="small"><span class="text-success">To:</span> <span class="address-truncate" title="${tx.receiver}">${tx.receiver.slice(0, 10)}...${tx.receiver.slice(-8)}</span></div>
+              </div>
+            </div>
+          `;
+          elements.mempoolList.appendChild(txElement);
+        });
+      } catch (error) {
+        console.error("Error loading mempool:", error);
+      }
+    }
+
+    // Start mining process
+    async function startMining() {
+      showLoading(elements.mineBtn, elements.mineBtnText, elements.mineSpinner);
+      
+      const minerAddress = document.getElementById("minerAddress").value || "demo_miner";
+      
+      try {
+        // Get mining job
+        const jobRes = await fetch(`${API}/getMiningJob`);
+        if (!jobRes.ok) throw new Error("Failed to get mining job");
+        const job = await jobRes.json();
+        
+        // Update blockchain height display
+        elements.blockHeight.innerHTML = `Height: ${job.height} | <span class="text-truncate" title="${job.previousHash}">${job.previousHash.slice(0, 10)}...</span>`;
+        
+        // Simulate mining delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Create mined block
+        const minedBlock = {
+          previousHash: job.previousHash,
+          height: job.height,
+          transactions: job.mempool,
+          nonce: Math.floor(Math.random() * 1e6),
+          timestamp: Date.now(),
+          miner: minerAddress
+        };
+
+        // Submit mined block
+        const submitRes = await fetch(`${API}/submitBlock`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ block: minedBlock })
+        });
+        
+        const data = await submitRes.json();
+        
+        if (submitRes.ok) {
+          showResult(elements.mineResult, "✅ Block mined and submitted successfully!", true);
+          // Refresh mempool
+          loadMempool();
+        } else {
+          showResult(elements.mineResult, `❌ Mining failed: ${data.error || "Unknown error"}`, false);
+        }
+      } catch (error) {
+        showResult(elements.mineResult, `❌ Error: ${error.message}`, false);
+      } finally {
+        hideLoading(elements.mineBtn, elements.mineBtnText, elements.mineSpinner);
+      }
+    }
+
+    // Check node status
+    async function checkNodeStatus() {
+      try {
+        const res = await fetch(`${API}/status`);
+        if (res.ok) {
+          const data = await res.json();
+          elements.nodeStatus.textContent = `Node: ${data.status} | v${data.version}`;
+          elements.blockHeight.textContent = `Height: ${data.height}`;
+        }
+      } catch (error) {
+        elements.nodeStatus.innerHTML = '<i class="bi bi-circle-fill text-danger me-1"></i> Node not responding';
+      }
+    }
+
+    // Show loading state
+    function showLoading(button, buttonText, spinner) {
+      button.disabled = true;
+      buttonText.textContent = buttonText.textContent.replace("...", "");
+      spinner.style.display = "inline-block";
+    }
+
+    // Hide loading state
+    function hideLoading(button, buttonText, spinner) {
+      button.disabled = false;
+      spinner.style.display = "none";
+    }
+
+    // Show result message
+    function showResult(element, message, isSuccess) {
+      element.textContent = message;
+      element.className = isSuccess ? "mt-3 alert alert-success" : "mt-3 alert alert-danger";
+      element.style.display = "block";
+      
+      // Auto-hide success messages after 5 seconds
+      if (isSuccess) {
+        setTimeout(() => {
+          element.style.display = "none";
+        }, 5000);
+      }
+    }
+
+    // Initialize the application
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>

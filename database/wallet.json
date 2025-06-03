@@ -1,64 +1,54 @@
 [
   {
-    "pkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArp7Eu7xjrw8a6zU88T0T\ndYY993F1CuwLExrV6sntO7zsr/pYKJdZ4QUXPqgMN5F67jkyjxyNjjsfFiIWs80X\naO8CSEoeXR0ulMMVYGAOgS2OafIPsUxC3cjHhE197+UeRZW1WckiXUzhqciQ/LdM\nuUJtw6Zl6BC+URMMkPHJPKfgqHDTGFBd0v2NCw/g2Is3tCBNRqLAgBTXez3NpW3E\nIsspZoOd6ZjHCjvSr5VVJ/JMinEbTh5BOg9uEMSpjm0Em+7njWyfKQ3oSc0ehp6Y\nmTRR4TmskPFyblhGNIlTM/TJ71LqvgxgODAX4x0750cb3CIfHNv07g9gT8Ki4dr7\nMwIDAQAB\n-----END PUBLIC KEY-----\n",
-    "solde": 9998,
-    "sentTransactions": [
-      {
-        "signature": "4d58270872fd4531ae455f35c74e76479e989e07d50e250124dcb4ba475fa1dde132c4b9056977efc05c0d8adde805f00c7f3c6240087686ecd379cf1667748da6315f159a46da4993d869cfc95eea09a50e9707445ca1b561a1d6e5801f06b682972a6c0128e95c5ee3bbaf7188ebf138d4c2fc5db05ddd6a05a2fda3361f96fb25037fe32375d340ceb7973e03329d6c4b9b2d0c15d5b44f9f4553cb9b1a2e8d0f6bf7be3a4985e77024da79d45ffed29e96c666a7ec2cb5b7ebe773236b9a41ae52a2e79ed30367cf8bfd75e2ed982a01ea5c901fece4f2bd72ce96c9cc6f279dfcc8fd1b4d05ba0dce90bd15d2d252496c4ccc473633bfa8af541cbc5442",
-        "fees": 2,
-        "amount": 50,
-        "mempool": null,
-        "block": null,
-        "sender": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArp7Eu7xjrw8a6zU88T0T\ndYY993F1CuwLExrV6sntO7zsr/pYKJdZ4QUXPqgMN5F67jkyjxyNjjsfFiIWs80X\naO8CSEoeXR0ulMMVYGAOgS2OafIPsUxC3cjHhE197+UeRZW1WckiXUzhqciQ/LdM\nuUJtw6Zl6BC+URMMkPHJPKfgqHDTGFBd0v2NCw/g2Is3tCBNRqLAgBTXez3NpW3E\nIsspZoOd6ZjHCjvSr5VVJ/JMinEbTh5BOg9uEMSpjm0Em+7njWyfKQ3oSc0ehp6Y\nmTRR4TmskPFyblhGNIlTM/TJ71LqvgxgODAX4x0750cb3CIfHNv07g9gT8Ki4dr7\nMwIDAQAB\n-----END PUBLIC KEY-----\n",
-        "receiver": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTNfaJlKuwSrLPS4RPA2\nrKSN/W/ySyKCdJ5q3Ci1391ag1pLJenUtL/TYdBXP7GbXTqQX3GXWw6tHGVucl+a\nhyFZiA7yEIVy98t0gTpirMkW1uYUbZ2V+undOqPsruPJy/J0fH7/zeiFsIwPWM9L\ns0sZD8MNI6JVFPk+t2tuZAESxdVIToho0uLW2Nc2BXYbkcLQ880WbD5SvOEuM9uv\ntiTXoCX/mQSHtr0AXFvHFTqEfgdVNhWaVEsq7VBaWjFZ/RtgSa8K/rMYq7FYlMMq\nD4gN0YFa6Ht2PFhBiq2QzJp6mVd+juOtO1c3FgMkcfVKRr/X3lRUu1Q+9dP9xcLZ\nOQIDAQAB\n-----END PUBLIC KEY-----\n"
-      },
-      {
-        "signature": "06fcd8bb83747315c5927b63b12d0ad80865ecad52e502ccb18532e3a2e6f1dd0cfe9eb9db7e3bbe8a495780217b1392c14ab1859f126c685ab1d883c43059c8603c24675cb2c2f94f3c71da303d4f44ec6acd00d6e3e2288a8f0b6796737098f24bbd000a9099ea67dd4c1cf5b791a248fad1c9dc17fd0bf884526d574a6fab0856d8ebdeb1218024bd8ef25b8c0c9b614493aa6af2318d50d903d1ae318185c472d79b63b3b5754f8e25bc13b46f7199f4e3f028d271892b06279d03d4cc270ab94e689e0a75a9c09160a76e20dfc1ae36f75b0d2a42e5561cf6418a224f8f72930053cfe6c4c8bed7ec410b7b5866c945d775eb8657f13d3a4faeae70811e",
-        "fees": 2,
-        "amount": 52,
-        "mempool": null,
-        "block": null,
-        "sender": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArp7Eu7xjrw8a6zU88T0T\ndYY993F1CuwLExrV6sntO7zsr/pYKJdZ4QUXPqgMN5F67jkyjxyNjjsfFiIWs80X\naO8CSEoeXR0ulMMVYGAOgS2OafIPsUxC3cjHhE197+UeRZW1WckiXUzhqciQ/LdM\nuUJtw6Zl6BC+URMMkPHJPKfgqHDTGFBd0v2NCw/g2Is3tCBNRqLAgBTXez3NpW3E\nIsspZoOd6ZjHCjvSr5VVJ/JMinEbTh5BOg9uEMSpjm0Em+7njWyfKQ3oSc0ehp6Y\nmTRR4TmskPFyblhGNIlTM/TJ71LqvgxgODAX4x0750cb3CIfHNv07g9gT8Ki4dr7\nMwIDAQAB\n-----END PUBLIC KEY-----\n",
-        "receiver": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTNfaJlKuwSrLPS4RPA2\nrKSN/W/ySyKCdJ5q3Ci1391ag1pLJenUtL/TYdBXP7GbXTqQX3GXWw6tHGVucl+a\nhyFZiA7yEIVy98t0gTpirMkW1uYUbZ2V+undOqPsruPJy/J0fH7/zeiFsIwPWM9L\ns0sZD8MNI6JVFPk+t2tuZAESxdVIToho0uLW2Nc2BXYbkcLQ880WbD5SvOEuM9uv\ntiTXoCX/mQSHtr0AXFvHFTqEfgdVNhWaVEsq7VBaWjFZ/RtgSa8K/rMYq7FYlMMq\nD4gN0YFa6Ht2PFhBiq2QzJp6mVd+juOtO1c3FgMkcfVKRr/X3lRUu1Q+9dP9xcLZ\nOQIDAQAB\n-----END PUBLIC KEY-----\n"
-      }
-    ],
-    "receivedTransactions": [],
-    "minedTransactions": [
-      {
-        "signature": "4d58270872fd4531ae455f35c74e76479e989e07d50e250124dcb4ba475fa1dde132c4b9056977efc05c0d8adde805f00c7f3c6240087686ecd379cf1667748da6315f159a46da4993d869cfc95eea09a50e9707445ca1b561a1d6e5801f06b682972a6c0128e95c5ee3bbaf7188ebf138d4c2fc5db05ddd6a05a2fda3361f96fb25037fe32375d340ceb7973e03329d6c4b9b2d0c15d5b44f9f4553cb9b1a2e8d0f6bf7be3a4985e77024da79d45ffed29e96c666a7ec2cb5b7ebe773236b9a41ae52a2e79ed30367cf8bfd75e2ed982a01ea5c901fece4f2bd72ce96c9cc6f279dfcc8fd1b4d05ba0dce90bd15d2d252496c4ccc473633bfa8af541cbc5442",
-        "fees": 2,
-        "amount": 50,
-        "mempool": null,
-        "block": null,
-        "sender": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArp7Eu7xjrw8a6zU88T0T\ndYY993F1CuwLExrV6sntO7zsr/pYKJdZ4QUXPqgMN5F67jkyjxyNjjsfFiIWs80X\naO8CSEoeXR0ulMMVYGAOgS2OafIPsUxC3cjHhE197+UeRZW1WckiXUzhqciQ/LdM\nuUJtw6Zl6BC+URMMkPHJPKfgqHDTGFBd0v2NCw/g2Is3tCBNRqLAgBTXez3NpW3E\nIsspZoOd6ZjHCjvSr5VVJ/JMinEbTh5BOg9uEMSpjm0Em+7njWyfKQ3oSc0ehp6Y\nmTRR4TmskPFyblhGNIlTM/TJ71LqvgxgODAX4x0750cb3CIfHNv07g9gT8Ki4dr7\nMwIDAQAB\n-----END PUBLIC KEY-----\n",
-        "receiver": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTNfaJlKuwSrLPS4RPA2\nrKSN/W/ySyKCdJ5q3Ci1391ag1pLJenUtL/TYdBXP7GbXTqQX3GXWw6tHGVucl+a\nhyFZiA7yEIVy98t0gTpirMkW1uYUbZ2V+undOqPsruPJy/J0fH7/zeiFsIwPWM9L\ns0sZD8MNI6JVFPk+t2tuZAESxdVIToho0uLW2Nc2BXYbkcLQ880WbD5SvOEuM9uv\ntiTXoCX/mQSHtr0AXFvHFTqEfgdVNhWaVEsq7VBaWjFZ/RtgSa8K/rMYq7FYlMMq\nD4gN0YFa6Ht2PFhBiq2QzJp6mVd+juOtO1c3FgMkcfVKRr/X3lRUu1Q+9dP9xcLZ\nOQIDAQAB\n-----END PUBLIC KEY-----\n"
-      },
-      {
-        "signature": "06fcd8bb83747315c5927b63b12d0ad80865ecad52e502ccb18532e3a2e6f1dd0cfe9eb9db7e3bbe8a495780217b1392c14ab1859f126c685ab1d883c43059c8603c24675cb2c2f94f3c71da303d4f44ec6acd00d6e3e2288a8f0b6796737098f24bbd000a9099ea67dd4c1cf5b791a248fad1c9dc17fd0bf884526d574a6fab0856d8ebdeb1218024bd8ef25b8c0c9b614493aa6af2318d50d903d1ae318185c472d79b63b3b5754f8e25bc13b46f7199f4e3f028d271892b06279d03d4cc270ab94e689e0a75a9c09160a76e20dfc1ae36f75b0d2a42e5561cf6418a224f8f72930053cfe6c4c8bed7ec410b7b5866c945d775eb8657f13d3a4faeae70811e",
-        "fees": 2,
-        "amount": 52,
-        "mempool": null,
-        "block": null,
-        "sender": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArp7Eu7xjrw8a6zU88T0T\ndYY993F1CuwLExrV6sntO7zsr/pYKJdZ4QUXPqgMN5F67jkyjxyNjjsfFiIWs80X\naO8CSEoeXR0ulMMVYGAOgS2OafIPsUxC3cjHhE197+UeRZW1WckiXUzhqciQ/LdM\nuUJtw6Zl6BC+URMMkPHJPKfgqHDTGFBd0v2NCw/g2Is3tCBNRqLAgBTXez3NpW3E\nIsspZoOd6ZjHCjvSr5VVJ/JMinEbTh5BOg9uEMSpjm0Em+7njWyfKQ3oSc0ehp6Y\nmTRR4TmskPFyblhGNIlTM/TJ71LqvgxgODAX4x0750cb3CIfHNv07g9gT8Ki4dr7\nMwIDAQAB\n-----END PUBLIC KEY-----\n",
-        "receiver": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTNfaJlKuwSrLPS4RPA2\nrKSN/W/ySyKCdJ5q3Ci1391ag1pLJenUtL/TYdBXP7GbXTqQX3GXWw6tHGVucl+a\nhyFZiA7yEIVy98t0gTpirMkW1uYUbZ2V+undOqPsruPJy/J0fH7/zeiFsIwPWM9L\ns0sZD8MNI6JVFPk+t2tuZAESxdVIToho0uLW2Nc2BXYbkcLQ880WbD5SvOEuM9uv\ntiTXoCX/mQSHtr0AXFvHFTqEfgdVNhWaVEsq7VBaWjFZ/RtgSa8K/rMYq7FYlMMq\nD4gN0YFa6Ht2PFhBiq2QzJp6mVd+juOtO1c3FgMkcfVKRr/X3lRUu1Q+9dP9xcLZ\nOQIDAQAB\n-----END PUBLIC KEY-----\n"
-      }
-    ]
-  },
-  {
-    "pkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTNfaJlKuwSrLPS4RPA2\nrKSN/W/ySyKCdJ5q3Ci1391ag1pLJenUtL/TYdBXP7GbXTqQX3GXWw6tHGVucl+a\nhyFZiA7yEIVy98t0gTpirMkW1uYUbZ2V+undOqPsruPJy/J0fH7/zeiFsIwPWM9L\ns0sZD8MNI6JVFPk+t2tuZAESxdVIToho0uLW2Nc2BXYbkcLQ880WbD5SvOEuM9uv\ntiTXoCX/mQSHtr0AXFvHFTqEfgdVNhWaVEsq7VBaWjFZ/RtgSa8K/rMYq7FYlMMq\nD4gN0YFa6Ht2PFhBiq2QzJp6mVd+juOtO1c3FgMkcfVKRr/X3lRUu1Q+9dP9xcLZ\nOQIDAQAB\n-----END PUBLIC KEY-----\n",
-    "solde": 50,
+    "pkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv7RxNttQujLwnP1eFUvb\n67tjP2VpGDPGmt/yXbGk9YxVSzP+yNQOsoQSnT2+sj2nIDleMErfQLLoIN+gsuFl\nNDlRrGKIcpOWIwAnc3mVLTZaHvYyRpgM3k1JwM6qdmuPMrgGlhswun4TPFPGca4m\nlE0GGwzNowfPMtWt6Yh0VEzq2QbKpIZbRmlN7KsT7uGE6misyF53TPCT8rbN1AcS\nqwuzAWGOtJ7e4AbxC5h8mAs7H3CRpmVanmp7Grj1CXd3wf9WlkPpNlmlNawhMIhL\nhUg6BzRz1+L/lfPTF1zQmqOy3bYBYxlNrGEGOGx7uSfdnYIUm9oLelitwsLL7RW0\nRQIDAQAB\n-----END PUBLIC KEY-----\n",
+    "solde": 333,
     "sentTransactions": [],
     "receivedTransactions": [
       {
-        "signature": "4d58270872fd4531ae455f35c74e76479e989e07d50e250124dcb4ba475fa1dde132c4b9056977efc05c0d8adde805f00c7f3c6240087686ecd379cf1667748da6315f159a46da4993d869cfc95eea09a50e9707445ca1b561a1d6e5801f06b682972a6c0128e95c5ee3bbaf7188ebf138d4c2fc5db05ddd6a05a2fda3361f96fb25037fe32375d340ceb7973e03329d6c4b9b2d0c15d5b44f9f4553cb9b1a2e8d0f6bf7be3a4985e77024da79d45ffed29e96c666a7ec2cb5b7ebe773236b9a41ae52a2e79ed30367cf8bfd75e2ed982a01ea5c901fece4f2bd72ce96c9cc6f279dfcc8fd1b4d05ba0dce90bd15d2d252496c4ccc473633bfa8af541cbc5442",
-        "fees": 2,
-        "amount": 50,
-        "mempool": null,
-        "block": null,
-        "sender": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArp7Eu7xjrw8a6zU88T0T\ndYY993F1CuwLExrV6sntO7zsr/pYKJdZ4QUXPqgMN5F67jkyjxyNjjsfFiIWs80X\naO8CSEoeXR0ulMMVYGAOgS2OafIPsUxC3cjHhE197+UeRZW1WckiXUzhqciQ/LdM\nuUJtw6Zl6BC+URMMkPHJPKfgqHDTGFBd0v2NCw/g2Is3tCBNRqLAgBTXez3NpW3E\nIsspZoOd6ZjHCjvSr5VVJ/JMinEbTh5BOg9uEMSpjm0Em+7njWyfKQ3oSc0ehp6Y\nmTRR4TmskPFyblhGNIlTM/TJ71LqvgxgODAX4x0750cb3CIfHNv07g9gT8Ki4dr7\nMwIDAQAB\n-----END PUBLIC KEY-----\n",
-        "receiver": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTNfaJlKuwSrLPS4RPA2\nrKSN/W/ySyKCdJ5q3Ci1391ag1pLJenUtL/TYdBXP7GbXTqQX3GXWw6tHGVucl+a\nhyFZiA7yEIVy98t0gTpirMkW1uYUbZ2V+undOqPsruPJy/J0fH7/zeiFsIwPWM9L\ns0sZD8MNI6JVFPk+t2tuZAESxdVIToho0uLW2Nc2BXYbkcLQ880WbD5SvOEuM9uv\ntiTXoCX/mQSHtr0AXFvHFTqEfgdVNhWaVEsq7VBaWjFZ/RtgSa8K/rMYq7FYlMMq\nD4gN0YFa6Ht2PFhBiq2QzJp6mVd+juOtO1c3FgMkcfVKRr/X3lRUu1Q+9dP9xcLZ\nOQIDAQAB\n-----END PUBLIC KEY-----\n"
+        "sender": "0x0",
+        "receipient": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv7RxNttQujLwnP1eFUvb\n67tjP2VpGDPGmt/yXbGk9YxVSzP+yNQOsoQSnT2+sj2nIDleMErfQLLoIN+gsuFl\nNDlRrGKIcpOWIwAnc3mVLTZaHvYyRpgM3k1JwM6qdmuPMrgGlhswun4TPFPGca4m\nlE0GGwzNowfPMtWt6Yh0VEzq2QbKpIZbRmlN7KsT7uGE6misyF53TPCT8rbN1AcS\nqwuzAWGOtJ7e4AbxC5h8mAs7H3CRpmVanmp7Grj1CXd3wf9WlkPpNlmlNawhMIhL\nhUg6BzRz1+L/lfPTF1zQmqOy3bYBYxlNrGEGOGx7uSfdnYIUm9oLelitwsLL7RW0\nRQIDAQAB\n-----END PUBLIC KEY-----\n",
+        "amount": 333,
+        "fees": 0,
+        "signature": "GENESIS_TRANSACTION"
       }
     ],
+    "minedTransactions": []
+  },
+  {
+    "pkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAklz0YbHV9SiBNsqsMR42\nvID8odPgkyreD6IYW/Z7xOJXyqilmos5+MDaBO6ncU+JKOJLljHydo1S8R8CmOfW\nnY8+EeaRz0w9MFZDmkHMnXe9Z8+8oHYSMimeaLa9gvuSd+jNaxG67WiAgO+VAQkM\nt6lM8GgXMHqY1DkuNcOTjeyXkBeHmF7oR3XcLccp9BPXBij3nca3J3btQSXODDT3\nAzsrMMMYeeQ6P3cF3FZamhdgxcukWNT+ZECPG4OciQf0cGfsJwQGLM67sDR6m8iF\n4M7g5W0aFdxkSnlu5WorLv9xImstgsgVDCyqS+PmS2htttMOOWVSbNZH6VBNOnxG\nzwIDAQAB\n-----END PUBLIC KEY-----\n",
+    "solde": 333,
+    "sentTransactions": [],
+    "receivedTransactions": [
+      {
+        "sender": "0x0",
+        "receipient": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAklz0YbHV9SiBNsqsMR42\nvID8odPgkyreD6IYW/Z7xOJXyqilmos5+MDaBO6ncU+JKOJLljHydo1S8R8CmOfW\nnY8+EeaRz0w9MFZDmkHMnXe9Z8+8oHYSMimeaLa9gvuSd+jNaxG67WiAgO+VAQkM\nt6lM8GgXMHqY1DkuNcOTjeyXkBeHmF7oR3XcLccp9BPXBij3nca3J3btQSXODDT3\nAzsrMMMYeeQ6P3cF3FZamhdgxcukWNT+ZECPG4OciQf0cGfsJwQGLM67sDR6m8iF\n4M7g5W0aFdxkSnlu5WorLv9xImstgsgVDCyqS+PmS2htttMOOWVSbNZH6VBNOnxG\nzwIDAQAB\n-----END PUBLIC KEY-----\n",
+        "amount": 333,
+        "fees": 0,
+        "signature": "GENESIS_TRANSACTION"
+      }
+    ],
+    "minedTransactions": []
+  },
+  {
+    "pkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz/o6SyxjlillPUUAIpSb\n4oRy3++T4PxRGZRWDoLRf/EiEbKtJ6CeRXJr0NzOgpTGagCP2b4v8ayvW1Kfltfr\nM0/IbKdEemnRU9j9LvZcXjorMyqiYACD+ZCvfIRki2Rqr68baj5fTE3Q1lZSeA22\nwRGs/PNHYRSFDZYY7ovbWze9tTnhoHfhsWVWqr5OeWEHDe/t+nxZDzT3/HBEJDkq\n9FXOXMYqKUPwbqK5y0uPWKuMpeA9OJHLiO7jtBuQSbpwOKH5dxsR/PgUK4GZuKPb\nJiOJWRYNeFKUNoL1xTfV8r/aaSq4juegkpyHLeq5fgMwGU95+fgDRy9aWfNO2P+q\nMwIDAQAB\n-----END PUBLIC KEY-----\n",
+    "solde": 333,
+    "sentTransactions": [],
+    "receivedTransactions": [
+      {
+        "sender": "0x0",
+        "receipient": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz/o6SyxjlillPUUAIpSb\n4oRy3++T4PxRGZRWDoLRf/EiEbKtJ6CeRXJr0NzOgpTGagCP2b4v8ayvW1Kfltfr\nM0/IbKdEemnRU9j9LvZcXjorMyqiYACD+ZCvfIRki2Rqr68baj5fTE3Q1lZSeA22\nwRGs/PNHYRSFDZYY7ovbWze9tTnhoHfhsWVWqr5OeWEHDe/t+nxZDzT3/HBEJDkq\n9FXOXMYqKUPwbqK5y0uPWKuMpeA9OJHLiO7jtBuQSbpwOKH5dxsR/PgUK4GZuKPb\nJiOJWRYNeFKUNoL1xTfV8r/aaSq4juegkpyHLeq5fgMwGU95+fgDRy9aWfNO2P+q\nMwIDAQAB\n-----END PUBLIC KEY-----\n",
+        "amount": 333,
+        "fees": 0,
+        "signature": "GENESIS_TRANSACTION"
+      }
+    ],
+    "minedTransactions": []
+  },
+  {
+    "pkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0cNxFLxF7s9mfevxsseH\nKEIXtfm16rxIgbwzphyq5SP4r4UZ1KUyrDSvDyjJYuET9Q1XQHr+rZwlLWVEYi8I\n4DT9QtCf4LLRjZzfPGyaVj3lhibHzZmp1E474nL3H7vN14iB1INMnd4kXDxXk8Tg\nBdgmQqlIRYkcu9oeLbSamxwR4lbxweL/+f/y98QfOXSqeiOCs2jfkmQsdcHVzDxI\nSqRjYVnbuXvdXZYyNjhCqVYUvV6xasCvbMWOKWjmf/QL0fxv4p9cquhrjEFNAgik\nzFJmYsbaufmETWf/n+V3cSUV2qybb7Zu0GDPXjm5d7kWhphLo70pIirT2ExYpFe8\nTQIDAQAB\n-----END PUBLIC KEY-----\n",
+    "solde": 0,
+    "sentTransactions": [],
+    "receivedTransactions": [],
     "minedTransactions": []
   }
 ]
