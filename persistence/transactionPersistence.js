@@ -12,35 +12,43 @@ const { getWalletByPublicKey } = require('./walletPersistence');
 const getSolde = async (address) => {
     try {
         const blockchain = await loadBlockchain();
-
         if (!blockchain || !blockchain.head) {
             throw new Error('Blockchain is empty or not loaded');
         }
-
         let balance = 0;
         let currentBlockHash = blockchain.head;
-        let currentBlock = await getBlock(currentBlockHash);
-        while (currentBlock) {
-            
-            // If the address is the miner of the current block, add the block reward
-            
+
+        while (currentBlockHash) {
+            const currentBlock = await getBlock(currentBlockHash);
+            if (!currentBlock) break;
+
+            // If the address is the miner of the current block, add the block reward and fees
             if (address === currentBlock.miner) {
-                console.log("Adding block reward for miner:", currentBlock.miner);
+                console.log("Adding block reward for miner");
                 balance += currentBlock.blockReward || 0;
+                console.log(currentBlock.blockReward);
+
+                await currentBlock.transactions.forEach(tx => {
+                        balance += tx.fees || 0;
+                });
+                console.log("Adding fees for miner");
+
+               
+                 console.log(balance);
             }
 
-            // Process transactions
+            // Process transactions in the block
             if (Array.isArray(currentBlock.transactions)) {
                 for (const tx of currentBlock.transactions) {
                     if (tx.sender === address) {
                         balance -= (tx.amount || 0) + (tx.fees || 0);
-                    } else if (tx.receipient === address) {
-                        balance += (tx.amount || 0); // Only amount, NOT fees
-                    }
+                    } else if (tx.receiver === address) {
+                        balance += tx.amount || 0;
+                    } 
                 }
             }
 
-            currentBlock = currentBlock.previousBlock; // Corrected field name to 'previousBlock'
+            currentBlockHash = currentBlock.previousHash;
         }
 
         return balance;
@@ -49,6 +57,7 @@ const getSolde = async (address) => {
         throw error;
     }
 };
+
 
 
 const verifierTransaction = async (transaction) => {
