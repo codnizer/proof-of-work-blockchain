@@ -4,6 +4,11 @@ const { Transaction } = require('../models/Transaction'); // Assuming Transactio
 const path = require('path');
 const { verifySignatureCustom} = require('../utils'); // Assuming these functions are defined in utils.js
 const { getBlock } = require('./blockPersistence'); // Assuming this function retrieves a block by its hash
+
+const crypto = require('crypto');
+ 
+const { getWalletByPublicKey } = require('./walletPersistence'); 
+
 const getSolde = async (address) => {
     try {
         const blockchain = await loadBlockchain();
@@ -16,10 +21,7 @@ const getSolde = async (address) => {
         let currentBlockHash = blockchain.head;
         let currentBlock = await getBlock(currentBlockHash);
         while (currentBlock) {
-            // Reward for mining
-            console.log("Current Block ", currentBlock);
-            console.log("Current Block Miner:", currentBlock.miner);
-            console.log("Address:", address);
+            
             // If the address is the miner of the current block, add the block reward
             
             if (address === currentBlock.miner) {
@@ -98,7 +100,60 @@ const verifierTransaction = async (transaction) => {
     }
 }
 
+
+
+
+const validateTransaction = async (tx) => {
+    const { signature, fees, amount, sender, receiver } = tx;
+
+    // Validate structure
+    if (!signature || fees == null || amount == null || !sender || !receiver) {
+        throw new Error("Missing required transaction fields.");
+    }
+
+    if (fees < 0 || amount <= 0) {
+        throw new Error("Invalid transaction fees or amount.");
+    }
+
+    // Check wallets exist
+    console.log('receiver:', receiver);
+    const senderWallet = await getWalletByPublicKey(sender);
+    const receiverWallet = await getWalletByPublicKey(receiver);
+
+    if (!senderWallet) {
+        throw new Error("Sender wallet not found.");
+    }
+
+    if (!receiverWallet) {
+        throw new Error("Receiver wallet not found.");
+    }
+    console.log("Sender Wallet:", senderWallet);
+
+    // Check balance
+   /*  const balance = senderWallet.solde; */
+    const balance = await getSolde(sender);
+    console.log("Balance of sender:", balance);
+    if (balance < (amount + fees)) {
+        throw new Error("Insufficient balance for transaction.");
+    }
+
+    // Verify signature (assumes tx hash is signature payload)
+    const verify = crypto.createVerify('SHA256');
+    verify.update(sender + receiver + amount + fees); // simplistic message structure
+    verify.end();
+
+    const isValidSignature = verify.verify(sender, signature, 'hex');
+    if (!isValidSignature) {
+        throw new Error("Invalid transaction signature.");
+    }
+
+    return true; // Transaction is valid
+};
+
+
+
 module.exports = {
     getSolde,
-    verifierTransaction
+    verifierTransaction,
+    validateTransaction
 };

@@ -1,8 +1,8 @@
 {
   "name": "uemf",
-  "difficulty": 6,
+  "difficulty": 1,
   "miningInterval": 300,
   "blockReward": 50,
   "denom": "uemfCoin",
-  "head": "957022772d6b3499a93a981391589710b3f111331b4c042def6433e809091a95"
+  "head": "08375d352a8d3a752b8c7835e73e898e4b2bbcde98577556f0cf6cbba901dde2"
 }

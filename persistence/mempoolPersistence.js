@@ -8,11 +8,17 @@ const { getAllBlocks, getLatestBlock, saveBlock } = require('./blockPersistence'
 const { loadBlockchain, saveBlockchain } = require('./blockchainPersistence');
  const Block = require('../models/Block'); // Assuming Block model is defined in models/block.js
 const {getWalletByPublicKey,addOrUpdateWallet} = require('./walletPersistence'); // Assuming this function retrieves a wallet by its public key
- const crypto = require('crypto');
+
+const {validateTransaction} = require('./transactionPersistence')
+
+const crypto = require('crypto');
 const calculateHash = (block) => {
-    return crypto.createHash('sha256')
-        .update(block.height + block.previousHash + block.timestamp + block.nonce + JSON.stringify(block.transactions))
-        .digest('hex');
+
+        const { height, previousHash, timestamp, transactions, difficulty, blockReward, nonce, miner } = block;
+        const txData = JSON.stringify(transactions);
+        return crypto.createHash('sha256')
+            .update(`${height}${previousHash}${timestamp}${txData}${difficulty}${blockReward}${nonce}${miner}`)
+            .digest('hex');
 }
 
  const getAllMempoolTransactions = async ( ) => {
@@ -42,10 +48,11 @@ const saveMempoolTransactions = async (transactions) => {
 
 // should be 2 fuctions one only add to mempool and the other one add to mempool and update wallets
 const addTransactionToMempool = async (transaction) => {
-    console.log("Adding transaction to mempool:", transaction);
+    await validateTransaction(transaction);
+    console.log("Adding transaction to mempool:");
     try {
         let transactions = await getAllMempoolTransactions();
-        console.log(transactions)
+       /*  console.log(transactions) */
         transactions.push(transaction);
         await saveMempoolTransactions(transactions);
 
@@ -159,7 +166,75 @@ const mineMempoolTransactions = async (miner) => {
     }
 }
 
+const validateAndSaveMinedBlock = async (submittedBlock) => {
+    try {
+        const blockchain = await loadBlockchain();
+        const latestBlock = await getLatestBlock();
 
-module.exports = { getAllMempoolTransactions, saveMempoolTransactions, addTransactionToMempool, removeTransactionFromMempool, mineMempoolTransactions };
+        // Step 1: Validate block structure
+        if (!submittedBlock || !Array.isArray(submittedBlock.transactions)) {
+            throw new Error("Invalid block structure.");
+        }
+
+        // Step 2: Validate previous hash
+        if (submittedBlock.previousHash !== (latestBlock ? latestBlock.hash : '0')) {
+            throw new Error("Invalid previous block hash.");
+        }
+
+        // Step 3: Recalculate hash and check difficulty
+        const recalculatedHash = calculateHash(submittedBlock);
+        if (recalculatedHash !== submittedBlock.hash) {
+            throw new Error("Invalid block hash.");
+        }
+
+        const difficultyPrefix = '0'.repeat(blockchain.difficulty);
+        if (!submittedBlock.hash.startsWith(difficultyPrefix)) {
+            throw new Error("Block does not satisfy difficulty.");
+        }
+
+        // Step 4: Validate transactions (light check here; expand as needed)
+        const allMempoolTxs = await getAllMempoolTransactions();
+        const submittedTxIds = await submittedBlock.transactions.map(tx => tx.signature);
+        const isTxValid = await submittedTxIds.every(signature => allMempoolTxs.find(tx => tx.signature === signature));
+
+        if (!isTxValid) {
+            throw new Error("Block contains invalid or outdated transactions.");
+        }
+        await submittedBlock.transactions.forEach(tx => {
+            passTransaction(tx); 
+        }
+        );
+
+        // Step 5: Save block
+        submittedBlock.blockchain = blockchain.name;
+        await saveBlock(submittedBlock);
+        await removeTransactionFromMempool(submittedBlock.transactions);
+
+        // Step 6: Update miner wallet
+        let minerWallet = await getWalletByPublicKey(submittedBlock.miner);
+        const totalFees = await submittedBlock.transactions.reduce((acc, tx) => acc + (tx.fees || 0), 0);
+        minerWallet.solde += submittedBlock.blockReward + totalFees;
+        await submittedBlock.transactions.forEach(tx => {
+minerWallet.minedTransactions.push(tx)
+ }  );
+        
+        await addOrUpdateWallet(minerWallet);
+
+
+
+        // Step 7: Update chain head
+        blockchain.head = submittedBlock.hash;
+        await saveBlockchain(blockchain);
+
+        return submittedBlock;
+
+    } catch (err) {
+        console.error("Error validating mined block:", err.message);
+        throw err;
+    }
+};
+
+
+module.exports = {validateAndSaveMinedBlock, getAllMempoolTransactions, saveMempoolTransactions, addTransactionToMempool, removeTransactionFromMempool, mineMempoolTransactions };
 
 

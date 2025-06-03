@@ -5,8 +5,8 @@ class Transaction {
         this.amount = amount
         this.mempool = null;
         this.block = null
-        this.sender = receiver
-        this.receiver = sender 
+        this.sender = sender
+        this.receiver =  receiver
     }
 }
 module.exports = Transaction

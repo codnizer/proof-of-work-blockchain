@@ -5,15 +5,16 @@ const { createKeyPairCustom } = require('../utils'); // Assuming createKeyPairCu
 const  Wallet  = require('../models/Wallet'); // Assuming Wallet model is defined in models/wallet.js
 const getAllWallets = async () => {
     try {
-        let wallets = await JSON.parse(await fs.readFile(pathDb, 'utf8'));
-        if (wallets == null) {
-            wallets = [];
-        }
-        return wallets;
+        const rawData = await fs.readFile(pathDb, 'utf8');
+        if (!rawData.trim()) return []; // Handle empty file safely
+        const wallets = JSON.parse(rawData);
+        return wallets || [];
     } catch (error) {
+        if (error.code === 'ENOENT') return []; // Handle file not found
         throw error;
     }
-}
+};
+
 
 const saveAllWallets = async (wallets) => {
     try {
