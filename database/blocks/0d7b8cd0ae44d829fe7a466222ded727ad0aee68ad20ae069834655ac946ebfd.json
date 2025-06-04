@@ -1,0 +1,22 @@
+{
+  "height": 2,
+  "hash": "0d7b8cd0ae44d829fe7a466222ded727ad0aee68ad20ae069834655ac946ebfd",
+  "previousHash": "0063229dc929ca79cb9d56b3f37ec8b32cbeb89d85ee6a419f144fad2b4a158b",
+  "timestamp": 1749065559481,
+  "difficulty": 1,
+  "blockReward": 50,
+  "nonce": 26,
+  "miner": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsX92TbruUCX34je63MGTTmtCaARWnTMmPQmcLYP/z/bAhesOuwadwTElL6YXQB2evRTNIQ9FlyoxuwS1zmKBkkVL3Wwcyz8dO0QYq5ReFRcjSG/+KWRHhlRmV2+CTObfNxk1cTeCWJ8R969pz8gbovE2LfQmJgnJq9zIP0XgHcB32KQ8nuzfQD9B/xTrBvXUiCJV5sMxnez2lEc6x938udolss0QFcRpxuewH01UG72sM9rO8q2eSq0ckDIbMmm006WnHZ4zWbbpcSpC8ct2V5/151ifWt3f1F+ApMcKe6UGfRsuYeej+Dc09SyBusXY/CUrRU5dWw8ludNaZYbkyQIDAQAB",
+  "transactions": [
+    {
+      "signature": "10af220ddf8e00b19ceff4b9e8001a90688206e80a1c494da7accf737f4791d4bc3697abacba7ccbb0f2b3239c91cb4d94118719a1f15f714e319e046761d0931a625baa0b4e54f8370d5a363cf4068bc77b9b02a7c75eab41f4ad877ca6fb0ccc600adc2ed3e5ee250c2fee25c88f72b35c53f7fcddf799cfd5554ad5a35eac763bf9dfb6f624b1eb03524859e90ded835a7c70bce2d3c9b1ea08c3a9d086afc7f920112b29d8e26ae47fc440c8de64785ae9a503bb6de7235f2e491da47a6634106cd1625ced3a03e3b031da3fa2bcaaa9baa21e31e7444e31dccce6c9c81faee0fb5947c7bcf5f84dd4558fef2f676d8fb0295d169a664c514694506cc64b",
+      "fees": 5,
+      "amount": 70,
+      "mempool": false,
+      "block": "0d7b8cd0ae44d829fe7a466222ded727ad0aee68ad20ae069834655ac946ebfd",
+      "sender": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArp7Eu7xjrw8a6zU88T0TdYY993F1CuwLExrV6sntO7zsr/pYKJdZ4QUXPqgMN5F67jkyjxyNjjsfFiIWs80XaO8CSEoeXR0ulMMVYGAOgS2OafIPsUxC3cjHhE197+UeRZW1WckiXUzhqciQ/LdMuUJtw6Zl6BC+URMMkPHJPKfgqHDTGFBd0v2NCw/g2Is3tCBNRqLAgBTXez3NpW3EIsspZoOd6ZjHCjvSr5VVJ/JMinEbTh5BOg9uEMSpjm0Em+7njWyfKQ3oSc0ehp6YmTRR4TmskPFyblhGNIlTM/TJ71LqvgxgODAX4x0750cb3CIfHNv07g9gT8Ki4dr7MwIDAQAB",
+      "receiver": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAklz0YbHV9SiBNsqsMR42vID8odPgkyreD6IYW/Z7xOJXyqilmos5+MDaBO6ncU+JKOJLljHydo1S8R8CmOfWnY8+EeaRz0w9MFZDmkHMnXe9Z8+8oHYSMimeaLa9gvuSd+jNaxG67WiAgO+VAQkMt6lM8GgXMHqY1DkuNcOTjeyXkBeHmF7oR3XcLccp9BPXBij3nca3J3btQSXODDT3AzsrMMMYeeQ6P3cF3FZamhdgxcukWNT+ZECPG4OciQf0cGfsJwQGLM67sDR6m8iF4M7g5W0aFdxkSnlu5WorLv9xImstgsgVDCyqS+PmS2htttMOOWVSbNZH6VBNOnxGzwIDAQAB"
+    }
+  ],
+  "blockchain": "uemfBlockchain"
+}

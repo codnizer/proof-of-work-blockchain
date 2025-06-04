@@ -10,7 +10,7 @@ const { loadBlockchain, saveBlockchain } = require('./blockchainPersistence');
 const {getWalletByPublicKey,addOrUpdateWallet} = require('./walletPersistence'); // Assuming this function retrieves a wallet by its public key
 
 const {validateTransaction} = require('./transactionPersistence')
-
+const {wrapKeyPair} = require('../utils'); // Assuming this function wraps a key pair for storage
 const crypto = require('crypto');
 const calculateHash = (block) => {
 
@@ -53,7 +53,9 @@ const addTransactionToMempool = async (transaction) => {
     try {
         let transactions = await getAllMempoolTransactions();
        /*  console.log(transactions) */
+       transaction.mempool = true; // Mark transaction as in mempool
         transactions.push(transaction);
+
         await saveMempoolTransactions(transactions);
 
         return true;
@@ -148,6 +150,7 @@ const mineMempoolTransactions = async (miner) => {
         );
         await saveBlock(newBlock);
         await removeTransactionFromMempool(transactions) ; // Clear mempool
+
         console.log("New block miner:", newBlock.miner);
         let minerWallet = await getWalletByPublicKey(newBlock.miner);
         console.log("Miner Wallet:", minerWallet);
@@ -204,6 +207,8 @@ const validateAndSaveMinedBlock = async (submittedBlock) => {
         }
         await submittedBlock.transactions.forEach(tx => {
             passTransaction(tx); 
+            tx.block= submittedBlock.hash; // Link transaction to the block
+            tx.mempool=false; // Mark transaction as not in mempool
         }
         );
 
@@ -215,6 +220,7 @@ const validateAndSaveMinedBlock = async (submittedBlock) => {
         // Step 6: Update miner wallet
         let minerWallet = await getWalletByPublicKey(submittedBlock.miner);
         const totalFees = await submittedBlock.transactions.reduce((acc, tx) => acc + (tx.fees || 0), 0);
+       console.log("Miner Wallet before update:", minerWallet);
         minerWallet.solde += submittedBlock.blockReward + totalFees;
         await submittedBlock.transactions.forEach(tx => {
 minerWallet.minedTransactions.push(tx)

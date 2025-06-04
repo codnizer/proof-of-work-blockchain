@@ -11,7 +11,7 @@ class Block {
         this.blockchain = null
         this.transactions = []
         this.miner = miner
-       /*  this.previousBlock = null */
+       
     }
 }
 module.exports = Block

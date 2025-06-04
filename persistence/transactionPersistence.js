@@ -4,7 +4,7 @@ const { Transaction } = require('../models/Transaction'); // Assuming Transactio
 const path = require('path');
 const { verifySignatureCustom} = require('../utils'); // Assuming these functions are defined in utils.js
 const { getBlock } = require('./blockPersistence'); // Assuming this function retrieves a block by its hash
-
+const { wrapKey } = require('../utils'); // Assuming this function wraps a key for storage
 const crypto = require('crypto');
  
 const { getWalletByPublicKey } = require('./walletPersistence'); 
@@ -139,25 +139,27 @@ const validateTransaction = async (tx) => {
     console.log("Sender Wallet:", senderWallet);
 
     // Check balance
-   /*  const balance = senderWallet.solde; */
     const balance = await getSolde(sender);
     console.log("Balance of sender:", balance);
     if (balance < (amount + fees)) {
         throw new Error("Insufficient balance for transaction.");
     }
 
-    // Verify signature (assumes tx hash is signature payload)
+    // Verify signature
     const verify = crypto.createVerify('SHA256');
-    verify.update(sender + receiver + amount + fees); // simplistic message structure
+    verify.update(sender + receiver + amount + fees);
     verify.end();
 
-    const isValidSignature = verify.verify(sender, signature, 'hex');
+    const pemSender = wrapKey(sender, 'public'); // 🧠 only for signature verification
+    const isValidSignature = verify.verify(pemSender, signature, 'hex');
+
     if (!isValidSignature) {
         throw new Error("Invalid transaction signature.");
     }
 
     return true; // Transaction is valid
 };
+
 
 
 

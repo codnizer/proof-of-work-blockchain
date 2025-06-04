@@ -382,3 +382,65 @@
   .text-muted{
     color: rgba(255, 255, 255, 0.781) !important;
   }
+
+  .blockchain-controls{
+    
+    display: flex
+;
+    gap: 25px;
+    margin-bottom: 15px;
+  }
+
+  .transactions-list {
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .tx-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .tx-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    
+    .tx-amount {
+      font-weight: bold;
+      color: #20c997;
+    }
+    
+    .tx-parties {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+    
+    .tx-from, .tx-to {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .tx-arrow {
+      margin: 0 10px;
+      color: #6f42c1;
+    }
+    
+    .back-to-chain {
+      margin-bottom: 15px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      color: #6f42c1;
+    }
+    
+    .back-to-chain:hover {
+      color: #8c68d0;
+    }

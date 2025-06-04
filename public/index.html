@@ -72,6 +72,7 @@
     <div class="text-center mb-5">
       <h1 class="display-4 fw-bold mb-3">uemfBlockchain Dashboard</h1>
       <p class="lead">Overview of the uemf blockchain network</p>
+        <p class="lead">A Node.js implementation of a Proof-of-Work blockchain network featuring real-time block visualization, transaction management, and mining operations</p>
     </div>
     
     <div class="row">
@@ -94,7 +95,7 @@
               </div>
               <div class="col-md-6 mb-3">
                 <div class="text-muted small">Block Time</div>
-                <div>~60 seconds</div>
+                <div>~10 minutes</div>
               </div>
               <div class="col-md-6 mb-3">
                 <div class="text-muted small">Coin Symbol</div>
@@ -105,8 +106,8 @@
                 <div>3000</div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="text-muted small">Version</div>
-                <div>1.0.0</div>
+                <div class="text-muted small">Created by</div>
+                <div>Mohamed KHEDID</div>
               </div>
             </div>
           </div>
@@ -358,7 +359,130 @@
             <div id="mempoolList" class="overflow-auto" style="max-height: 300px;"></div>
           </div>
         </div>
+      
+         <!-- NEW: Transaction Signing Guide -->
+      <div class="card mb-4">
+        <div class="card-header d-flex align-items-center">
+          <i class="bi bi-key me-2"></i>
+          Transaction Signing Guide
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <p>Use this Node.js script to sign your transactions before submitting them to the blockchain.</p>
+            
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>
+              Save this script as <code>sign-transaction.js</code> and run it with Node.js
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5>Signing Script</h5>
+              <button class="btn btn-sm btn-outline-primary" id="copySigningScriptBtn">
+                <i class="bi bi-clipboard me-1"></i> Copy Code
+              </button>
+            </div>
+            <pre class="bg-dark text-light p-3 rounded" style="max-height: 400px; overflow: auto;">
+              <code id="signingScriptCode">
+const crypto = require('crypto');
+
+// Wrap base64 key with PEM format
+function wrapKey(base64Key, type = 'private') {
+  const header = type === 'private' ? '-----BEGIN PRIVATE KEY-----' : '-----BEGIN PUBLIC KEY-----';
+  const footer = type === 'private' ? '-----END PRIVATE KEY-----' : '-----END PUBLIC KEY-----';
+  const formatted = base64Key.match(/.{1,64}/g).join('\n');
+  return `${header}\n${formatted}\n${footer}`;
+}
+
+// Public and private keys (base64 format)
+// REPLACE THESE WITH YOUR OWN KEYS
+const publicKeyBase64 = "YOUR_PUBLIC_KEY_BASE64";
+const privateKeyBase64 = "YOUR_PRIVATE_KEY_BASE64";
+
+// PEM-wrapped keys
+const publicKeyPem = wrapKey(publicKeyBase64, 'public');
+const privateKeyPem = wrapKey(privateKeyBase64, 'private');
+
+// Get transaction details from command line arguments
+const [receiverBase64, amount, fees] = process.argv.slice(2);
+
+if (!receiverBase64 || !amount || !fees) {
+  console.error("Usage: node sign-transaction.js <receiverPublicKey> <amount> <fees>");
+  process.exit(1);
+}
+
+// Wrap receiver's public key
+const receiverPem = wrapKey(receiverBase64, 'public');
+
+// Create message to sign
+const message = publicKeyBase64 + receiverBase64 + amount + fees;
+
+// Sign transaction
+const sign = crypto.createSign('SHA256');
+sign.update(message);
+sign.end();
+
+const signature = sign.sign(privateKeyPem, 'hex');
+
+// Output transaction details
+console.log("✅ Transaction signed successfully");
+console.log("🔏 Signature:", signature);
+console.log("\n📋 Copy this signature to the transaction form:");
+
+// Construct transaction object
+const transaction = {
+  sender: publicKeyPem,
+  receiver: receiverPem,
+  amount: Number(amount),
+  fees: Number(fees),
+  signature,
+};
+
+console.log(JSON.stringify(transaction, null, 2));
+              </code>
+            </pre>
+          </div>
+          
+          <div class="mb-3">
+            <h5>How to Use</h5>
+            <ol class="list-group list-group-numbered">
+              <li class="list-group-item bg-transparent text-light border-light">
+                Save the script as <code>sign-transaction.js</code>
+              </li>
+              <li class="list-group-item bg-transparent text-light border-light">
+                Replace <code>YOUR_PUBLIC_KEY_BASE64</code> and <code>YOUR_PRIVATE_KEY_BASE64</code> with your keys
+              </li>
+              <li class="list-group-item bg-transparent text-light border-light">
+                Run the script with Node.js: 
+                <div class="bg-dark text-light p-2 mt-2 rounded">
+                  <code>node sign-transaction.js &lt;receiverPublicKey&gt; &lt;amount&gt; &lt;fees&gt;</code>
+                </div>
+              </li>
+              <li class="list-group-item bg-transparent text-light border-light">
+                Copy the generated signature into the transaction form
+              </li>
+            </ol>
+          </div>
+          
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Keep your private key secure!
+          </div>
+          
+          <div class="alert alert-success">
+            <i class="bi bi-lightbulb me-2"></i>
+            <strong>Tip:</strong> When you create a wallet on this page, the keys are displayed in Base64 format ready for use.
+          </div>
+        </div>
       </div>
+    </div>
+  </div>
+</div>
+      </div>
+
+
+
     </div>
   </div>
 
@@ -378,20 +502,133 @@
             Manual Mining
           </div>
           <div class="card-body">
-            <div class="mb-3">
-              <p>Mine a new block and add pending transactions from the mempool to the blockchain.</p>
-              <div class="d-flex align-items-center mb-3">
-                <div class="me-2">Miner Address:</div>
-                <input type="text" class="form-control form-control-sm w-50" id="minerAddress" placeholder="Enter miner address" value="demo_miner">
+            <div class="mb-4">
+              <h5>Automated Mining Instructions</h5>
+              <p>Run this mining bot on your node to automatically mine blocks and earn rewards. The bot will continuously fetch mining jobs, solve proof-of-work, and submit blocks.</p>
+              
+              <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                Install required dependencies: <code>npm install axios crypto</code>
               </div>
             </div>
-            <button class="btn btn-warning w-100" id="mineBtn">
-              <span class="mining-animation">🛠️</span> 
-              <span id="mineBtnText">Mine New Block</span>
-              <span id="mineSpinner" class="spinner" style="display: none;"></span>
-            </button>
-            <div id="mineResult" class="mt-3 alert" style="display: none;"></div>
+            
+            <div class="mb-4">
+              <h5>Mining Bot Code</h5>
+              <pre class="bg-dark text-light p-3 rounded" style="max-height: 300px; overflow: auto;">
+                <code id="miningBotCode">
+const axios = require('axios');
+const crypto = require('crypto');
+
+// Replace with your actual miner's public key
+const MINER_PUBLIC_KEY = "YOUR_PUBLIC_KEY_HERE";
+
+// Simple hash function for blocks
+function calculateHash(block) {
+    const { height, previousHash, timestamp, transactions, difficulty, blockReward, nonce, miner } = block;
+    const txData = JSON.stringify(transactions);
+    return crypto.createHash('sha256')
+        .update(`${height}${previousHash}${timestamp}${txData}${difficulty}${blockReward}${nonce}${miner}`)
+        .digest('hex');
+}
+
+// Proof-of-work function
+function mineBlock(block, difficulty) {
+    const prefix = '0'.repeat(difficulty);
+    while (true) {
+        block.hash = calculateHash(block);
+        if (block.hash.startsWith(prefix)) {
+            return block;
+        }
+        block.nonce++;
+    }
+}
+
+// Mining bot loop
+async function startMining() {
+    try {
+        // Step 1: Fetch mining job
+        const jobRes = await axios.get('http://localhost:3000/getMiningJob');
+        const { height, previousHash, difficulty, blockReward, mempool } = jobRes.data;
+        const timestamp = Date.now();
+
+        // Step 2: Build block
+        let block = {
+            height,
+            hash: "", // To be calculated
+            previousHash,
+            timestamp,
+            difficulty,
+            blockReward,
+            nonce: 0,
+            miner: MINER_PUBLIC_KEY,
+            transactions: mempool
+        };
+
+        console.log("⛏️  Mining new block...");
+        const minedBlock = mineBlock(block, difficulty);
+        console.log(`✅ Block mined with hash: ${minedBlock.hash}`);
+
+        // Step 3: Submit block
+        const submitRes = await axios.post('http://localhost:3000/submitBlock', {
+            block: minedBlock
+        });
+
+        console.log("🧾 Server response:", submitRes.data.message);
+
+    } catch (err) {
+        console.error("❌ Mining failed:", err.response?.data?.error || err.message);
+    }
+}
+
+// Start mining in a continuous loop
+async function runMiningBot() {
+    while (true) {
+        await startMining();
+        // Wait for 5 seconds before starting next mining cycle
+        await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+}
+
+// Start the mining bot
+runMiningBot();</code>
+              </pre>
+              
+              <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-sm btn-outline-primary" id="copyBotCodeBtn">
+                  <i class="bi bi-clipboard me-1"></i> Copy Bot Code
+                </button>
+               
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <h5>How to Run</h5>
+              <ol class="list-group list-group-numbered">
+                <li class="list-group-item bg-transparent text-light border-light">
+                  Create a new JavaScript file (e.g., <code>mining-bot.js</code>)
+                </li>
+                <li class="list-group-item bg-transparent text-light border-light">
+                  Paste the code above into the file
+                </li>
+                <li class="list-group-item bg-transparent text-light border-light">
+                  Replace <code>YOUR_PUBLIC_KEY_HERE</code> with your miner's public key
+                </li>
+                <li class="list-group-item bg-transparent text-light border-light">
+                  Install required dependencies: <code>npm install axios crypto</code>
+                </li>
+                <li class="list-group-item bg-transparent text-light border-light">
+                  Run the bot: <code>node mining-bot.js</code>
+                </li>
+              </ol>
+            </div>
+            
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              Keep your node running 24/7 for continuous mining. Each successfully mined block earns you the block reward plus transaction fees.
+            </div>
           </div>
+        </div>
+      </div>
         </div>
       </div>
     </div>
@@ -411,7 +648,7 @@
           <i class="bi bi-arrow-repeat"></i> Refresh
         </button>
         <div class="input-group" style="width: 200px;">
-          <input type="text" id="blockSearch" class="form-control" placeholder="Search by height or hash">
+          <input type="text" id="blockSearch" class="form-control" placeholder="Search by block height ">
           <button class="btn btn-primary" id="searchBlockBtn">
             <i class="bi bi-search"></i>
           </button>
@@ -499,7 +736,7 @@
         </div>
         <div class="col-md-6 text-md-end">
           <div class="text-muted small">Connected to: <span id="apiEndpoint">http://localhost:3000</span></div>
-          <div class="text-muted small mt-1">v1.0.0</div>
+         
         </div>
       </div>
     </div>

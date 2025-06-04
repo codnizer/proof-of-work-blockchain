@@ -201,7 +201,7 @@ app.post('/solde', async (req, res) => {
     }
 }
 );
-app.post('/mine', async (req, res) => {
+/* app.post('/mine', async (req, res) => {
 
     
     try {
@@ -227,7 +227,7 @@ app.post('/mine', async (req, res) => {
         res.status(500).json({ error: 'Failed to mine transactions.' });
     } */
     
-});
+ 
 app.get('/blocks', async (req, res) => {
     try {
         const blocks = await getAllBlocks();

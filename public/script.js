@@ -123,47 +123,43 @@
 
     // Handle transaction submission
     async function handleTransactionSubmit(e) {
-      e.preventDefault();
-      showLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
+  e.preventDefault();
+  showLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
 
-      let sender = document.getElementById("sender").value.trim();
-      let receiver = document.getElementById("receiver").value.trim();
+  try {
+    let sender = document.getElementById("sender").value.trim();
+    let receiver = document.getElementById("receiver").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value);
+    const fees = parseFloat(document.getElementById("fees").value);
+    const signature = document.getElementById("signature").value;
 
-      // Convert escaped \n to real line breaks if needed
-      if (sender.includes("\\n")) sender = sender.split("\\n").join("\n");
-      if (receiver.includes("\\n")) receiver = receiver.split("\\n").join("\n");
+    // Replace escaped newlines
+    sender = sender.replace(/\\n/g, "\n");
+    receiver = receiver.replace(/\\n/g, "\n");
 
-      const tx = {
-        sender,
-        receiver,
-        amount: parseFloat(document.getElementById("amount").value),
-        fees: parseFloat(document.getElementById("fees").value),
-        signature: document.getElementById("signature").value
-      };
+    const tx = { sender, receiver, amount, fees, signature };
 
-      try {
-        const res = await fetch(`${API}/addTransaction`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(tx)
-        });
+    const res = await fetch(`${API}/addTransaction`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(tx)
+    });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (res.ok) {
-          showResult(elements.txResult, "✅ Transaction added to mempool.", true);
-          elements.transactionForm.reset();
-          document.getElementById("fees").value = "0.1";
-          loadMempool();
-        } else {
-          showResult(elements.txResult, `❌ Error: ${data.error || "Failed to add transaction"}`, false);
-        }
-      } catch (error) {
-        showResult(elements.txResult, `❌ Network error: ${error.message}`, false);
-      } finally {
-        hideLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
-      }
+    if (res.ok) {
+      showResult(elements.txResult, "✅ Transaction added to mempool.", true);
+      elements.transactionForm.reset();
+    } else {
+      throw new Error(data.message || "Failed to add transaction");
     }
+  } catch (err) {
+    showResult(elements.txResult, `❌ ${err.message}`, false);
+  } finally {
+    hideLoading(elements.txBtn, elements.txBtnText, elements.txSpinner);
+  }
+}
+
 
     // Handle balance check
     async function handleBalanceCheck(e) {
@@ -327,9 +323,18 @@
     const data = await res.json();
 
     if (res.ok) {
+
+        
+     
+     
+    
+    
+
       elements.publicKeyDisplay.textContent = data.publicKey;
       elements.privateKeyDisplay.textContent = data.privateKey;
       elements.walletResult.style.display = "block";
+      // Dispatch custom event
+    
 
       document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', copyToClipboard);
@@ -801,3 +806,32 @@ window.addEventListener('beforeunload', function (e) {
     if (!hash || hash.length <= startLength + endLength) return hash;
     return `${hash.substring(0, startLength)}...${hash.substring(hash.length - endLength)}`;
   }
+
+  document.getElementById('copyBotCodeBtn').addEventListener('click', () => {
+  const codeElement = document.getElementById('miningBotCode');
+  const range = document.createRange();
+  range.selectNode(codeElement);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+  
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      const originalText = copyBotCodeBtn.innerHTML;
+      copyBotCodeBtn.innerHTML = '<i class="bi bi-check me-1"></i> Copied!';
+      setTimeout(() => {
+        copyBotCodeBtn.innerHTML = originalText;
+      }, 2000);
+    }
+  } catch (err) {
+    console.error('Failed to copy:', err);
+  }
+  
+  window.getSelection().removeAllRanges();
+});
+
+ 
+
+ 
+
+ 
