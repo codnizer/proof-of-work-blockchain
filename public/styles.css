@@ -328,3 +328,57 @@
       50% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
+
+      /* Wallet Table Styles */
+  .table-hover tbody tr {
+    cursor: default;
+    transition: background-color 0.2s ease;
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .address-truncate {
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+  
+  .wallet-rank {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: rgba(111, 66, 193, 0.3);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 0.8rem;
+    margin-right: 10px;
+  }
+  
+  .balance-badge {
+    background: rgba(32, 201, 151, 0.15);
+    color: #20c997;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .pagination-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .table-responsive{
+    border-radius: 15px !important; ;
+  }
+  .text-muted{
+    color: rgba(255, 255, 255, 0.781) !important;
+  }

@@ -45,7 +45,13 @@
       elements.balanceForm?.addEventListener("submit", handleBalanceCheck);
       elements.refreshMempoolBtn?.addEventListener("click", loadMempool);
       elements.mineBtn?.addEventListener("click", startMining);
-      elements.createWalletBtn?.addEventListener("click", createWallet);
+     document.body.addEventListener('click', function(e) {
+    if (e.target.closest('#createWalletBtn')) {
+      e.preventDefault();
+      e.stopPropagation();
+      createWallet(e);
+    }
+  });
       
       // Attach copy event listeners
       document.querySelectorAll('.copy-btn').forEach(btn => {
@@ -295,34 +301,50 @@
 
     // Create a new wallet
     async function createWallet(e) {
-      e.preventDefault();  
-      showLoading(elements.createWalletBtn, elements.walletBtnText, elements.walletSpinner);
-      
-      try {
-        const res = await fetch(`${API}/wallet/create`, {
-          method: "POST"
-        });
-        
-        const data = await res.json();
-        
-        if (res.ok) {
-          elements.publicKeyDisplay.textContent = data.publicKey;
-          elements.privateKeyDisplay.textContent = data.privateKey;
-          elements.walletResult.style.display = "block";
-          
-          // Add event listeners to new copy buttons
-          document.querySelectorAll('.copy-btn').forEach(btn => {
-            btn.addEventListener('click', copyToClipboard);
-          });
-        } else {
-          showResult(elements.walletResult, `❌ Error: ${data.error || "Failed to create wallet"}`, false);
-        }
-      } catch (error) {
-        showResult(elements.walletResult, `❌ Network error: ${error.message}`, false);
-      } finally {
-        hideLoading(elements.createWalletBtn, elements.walletBtnText, elements.walletSpinner);
-      }
+ // Triple safety: prevent default behavior
+  if (e) {
+    console.log("Event object exists, preventing default");
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+  } else {
+    console.warn("No event object passed to createWallet");
+  }
+  
+  // Add this to prevent any form submission in the hierarchy
+  const forms = document.querySelectorAll('form');
+  forms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+      console.log("Preventing form submission");
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  });
+  showLoading(elements.createWalletBtn, elements.walletBtnText, elements.walletSpinner);
+  
+  try {
+    const res = await fetch(`${API}/wallet/create`, { method: "POST" });
+    const data = await res.json();
+
+    if (res.ok) {
+      elements.publicKeyDisplay.textContent = data.publicKey;
+      elements.privateKeyDisplay.textContent = data.privateKey;
+      elements.walletResult.style.display = "block";
+
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', copyToClipboard);
+      });
+    } else {
+      showResult(elements.walletResult, `❌ Error: ${data.error || "Failed to create wallet"}`, false);
     }
+  } catch (error) {
+    showResult(elements.walletResult, `❌ Network error: ${error.message}`, false);
+  } finally {
+    elements.createWalletBtn.disabled = false;
+    hideLoading(elements.createWalletBtn, elements.walletBtnText, elements.walletSpinner);
+  }
+}
+
 
     // Copy key to clipboard
     function copyToClipboard(e) {
@@ -648,4 +670,134 @@
     document.addEventListener("DOMContentLoaded", () => {
       init();
       initBlockchainExplorer();
+  initWalletSection();
+
+
+      
+     
+  
     });
+
+
+window.addEventListener('beforeunload', function (e) {
+  console.log("Reload/refresh attempted");
+});
+
+const forms = document.querySelectorAll('form');
+forms.forEach(form => {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+  });
+});
+
+window.addEventListener('beforeunload', function (e) {
+  console.log("Event object exists, preventing default");
+  e.preventDefault();       // Not required but safe to include
+  e.returnValue = '';       // This triggers the confirmation dialog in most browsers
+});
+  // Wallet listing variables
+  const WALLETS_PER_PAGE = 5;
+  let currentWalletPage = 1;
+  let totalWalletPages = 1;
+  let allWallets = [];
+
+  // DOM Elements for wallets
+  const walletElements = {
+    walletsList: document.getElementById('walletsList'),
+    walletsEmpty: document.getElementById('walletsEmpty'),
+    walletsCount: document.getElementById('walletsCount'),
+    refreshWalletsBtn: document.getElementById('refreshWalletsBtn'),
+    prevWalletPage: document.getElementById('prevWalletPage'),
+    nextWalletPage: document.getElementById('nextWalletPage')
+  };
+
+  // Initialize wallet section
+  function initWalletSection() {
+    walletElements.refreshWalletsBtn.addEventListener('click', loadWallets);
+    walletElements.prevWalletPage.addEventListener('click', () => changeWalletPage(-1));
+    walletElements.nextWalletPage.addEventListener('click', () => changeWalletPage(1));
+    
+    // Load wallets on page load
+    loadWallets();
+  }
+
+  // Load wallets from server
+  async function loadWallets() {
+    try {
+      const res = await fetch(`${API}/wallets`);
+      allWallets = await res.json();
+      
+      // Sort wallets by balance descending
+      allWallets.sort((a, b) => b.solde - a.solde);
+      
+      totalWalletPages = Math.ceil(allWallets.length / WALLETS_PER_PAGE);
+      currentWalletPage = 1;
+      
+      renderWallets();
+      updateWalletPagination();
+    } catch (error) {
+      console.error('Failed to load wallets:', error);
+      walletElements.walletsList.innerHTML = `
+        <tr>
+          <td colspan="2" class="text-center text-danger">Failed to load wallets</td>
+        </tr>
+      `;
+    }
+  }
+
+  // Render wallets for current page
+  function renderWallets() {
+    walletElements.walletsList.innerHTML = '';
+    
+    const startIndex = (currentWalletPage - 1) * WALLETS_PER_PAGE;
+    const endIndex = Math.min(startIndex + WALLETS_PER_PAGE, allWallets.length);
+    const walletsToShow = allWallets.slice(startIndex, endIndex);
+    
+    if (walletsToShow.length === 0) {
+      walletElements.walletsEmpty.style.display = 'block';
+      walletElements.walletsCount.textContent = 'Showing 0 wallets';
+      return;
+    }
+    
+    walletElements.walletsEmpty.style.display = 'none';
+    walletElements.walletsCount.textContent = `Showing ${startIndex + 1}-${endIndex} of ${allWallets.length} wallets`;
+    
+    walletsToShow.forEach(wallet => {
+      const walletRow = document.createElement('tr');
+      walletRow.innerHTML = `
+        <td>
+          <div class="d-flex align-items-center">
+            <i class="bi bi-key me-2 text-primary"></i>
+            <span class="address-truncate" title="${wallet.pkey}">${truncateHash(wallet.pkey)}</span>
+          </div>
+        </td>
+        <td class="text-end">
+          <span class="fw-bold">${wallet.solde.toFixed(2)}</span> UC
+        </td>
+      `;
+      walletElements.walletsList.appendChild(walletRow);
+    });
+  }
+
+  // Change wallet page
+  function changeWalletPage(direction) {
+    const newPage = currentWalletPage + direction;
+    
+    if (newPage < 1 || newPage > totalWalletPages) return;
+    
+    currentWalletPage = newPage;
+    renderWallets();
+    updateWalletPagination();
+  }
+
+  // Update wallet pagination controls
+  function updateWalletPagination() {
+    walletElements.prevWalletPage.disabled = currentWalletPage === 1;
+    walletElements.nextWalletPage.disabled = currentWalletPage === totalWalletPages;
+  }
+
+  // Helper function to truncate hashes
+  function truncateHash(hash, startLength = 6, endLength = 4) {
+    if (!hash || hash.length <= startLength + endLength) return hash;
+    return `${hash.substring(0, startLength)}...${hash.substring(hash.length - endLength)}`;
+  }

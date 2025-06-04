@@ -16,6 +16,7 @@ const { createNewMinerWallet } = require('./persistence/walletPersistence');
 const { loadBlockchain, saveBlockchain } = require('./persistence/blockchainPersistence');
 const { getAllWallets, addOrUpdateWallet } = require('./persistence/walletPersistence');
  const cors = require('cors'); // Import CORS middleware
+const { get } = require('http');
  
 
  app.use(cors()); // Enable CORS for all routes
@@ -189,10 +190,10 @@ app.get('/mempool', async (req, res) => {
 });  
 app.post('/solde', async (req, res) => {
     const address = req.body.address ;
-    console.log("Address to check balance:", address);
+    
     try {
         const balance = await getSolde(address);
-        console.log("Balance for address:", address, "is", balance);
+        console.log("Balance is", balance);
         res.status(200).json({ address, balance });
     } catch (error) {
         console.error('Error fetching balance:', error);
@@ -244,6 +245,18 @@ app.get('/blocks/latest', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch latest block.' });
     }
 });
+
+app.get('/wallets', async (req, res) => {
+    try {
+        const wallets = await getAllWallets();
+        res.status(200).json(wallets);
+        
+    } catch (error) {
+       
+        res.status(500).json({ error: 'Failed to get wallets.' });
+    }
+});
+
 app.post('/wallet/create', async (req, res) => {
     try {
         const keyPair = await createNewMinerWallet();

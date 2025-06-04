@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const pathDb = path.join(process.cwd(), 'database/wallet.json');
-const { createKeyPairCustom } = require('../utils');
+const { createKeyPairCustom, extractBase64Key } = require('../utils');
 const Wallet = require('../models/Wallet');
 
 const getAllWallets = async () => {
@@ -48,15 +48,20 @@ const addOrUpdateWallet = async (wallet) => {
 const createNewMinerWallet = async () => {
     const keyPair = createKeyPairCustom();
     console.log('Creating new miner wallet...', keyPair);
-
-    const newWallet = new Wallet(keyPair.publicKey);
+    const publicKeyBase64 = extractBase64Key(keyPair.publicKey);
+    const privateKeyBase64 = extractBase64Key(keyPair.privateKey);
+    const customKeyPair = {
+        publicKey: publicKeyBase64,
+        privateKey: privateKeyBase64
+    };
+    console.log('Custom Key Pair:', customKeyPair);
+    const newWallet = new Wallet(customKeyPair.publicKey);
 
     await addOrUpdateWallet(newWallet);
 
-    console.log('Your Public Key (use for receiving/mining):\n', keyPair.publicKey);
-    console.log('Your Private Key (keep secret!):\n', keyPair.privateKey);
+ 
 
-    return keyPair;
+    return customKeyPair;
 };
 
 module.exports = {
