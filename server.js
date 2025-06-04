@@ -1,25 +1,21 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const { addTransactionToMempool, getAllMempoolTransactions, removeTransactionFromMempool } = require('./persistence/mempoolPersistence');
 const { getAllBlocks, getLatestBlock,saveBlock } = require('./persistence/blockPersistence');
- 
  const { getSolde } = require('./persistence/transactionPersistence');
- const { mineMempoolTransactions,validateAndSaveMinedBlock } = require('./persistence/mempoolPersistence');
+ const { validateAndSaveMinedBlock } = require('./persistence/mempoolPersistence');
 const Block = require('./models/Block');
 const Transaction = require('./models/Transaction');
 const app = express();
-const PORT = 3000;
-const Blockchain = require('./models/Blockchain'); // Assuming Blockchain model is defined in models/blockchain.js
+const Blockchain = require('./models/Blockchain'); 
 const crypto = require('crypto');
 const { createNewMinerWallet } = require('./persistence/walletPersistence');
-
 const { loadBlockchain, saveBlockchain } = require('./persistence/blockchainPersistence');
 const { getAllWallets, addOrUpdateWallet } = require('./persistence/walletPersistence');
- const cors = require('cors'); // Import CORS middleware
-const { get } = require('http');
+const cors = require('cors');
+const PORT = 3000;
  
 
- app.use(cors()); // Enable CORS for all routes
+ app.use(cors()); 
 app.use(express.json());
  
 
@@ -66,7 +62,7 @@ async function waitAndInitializeGenesisBlock() {
 
     const genesisTransactions = wallets.map(w => ({
       sender: "0x0",
-      receipient: w.pkey,
+      receiver: w.pkey,
       amount: amountPerWallet,
       fees: 0,
       signature: "GENESIS_TRANSACTION",
@@ -93,7 +89,7 @@ async function waitAndInitializeGenesisBlock() {
 
     for (const wallet of wallets) {
       wallet.solde += amountPerWallet;
-      wallet.receivedTransactions.push(...genesisTransactions.filter(tx => tx.receipient === wallet.pkey));
+      wallet.receivedTransactions.push(...genesisTransactions.filter(tx => tx.receiver === wallet.pkey));
       await addOrUpdateWallet(wallet);
     }
   } catch (error) {
@@ -201,32 +197,6 @@ app.post('/solde', async (req, res) => {
     }
 }
 );
-/* app.post('/mine', async (req, res) => {
-
-    
-    try {
-        
-    const block = await validateAndSaveMinedBlock(req.body.block)
-        res.status(200).json({ message: 'Mining completed successfully.',newBlock: block });
-    }
-    catch (error) {
-        console.error('Mining error:', error);
-        res.status(500).json({ error: 'Failed to mine transactions.' });
-    }
-
-   /*  if (!req.body.miner) {
-        return res.status(400).json({ error: 'Miner address is required.' });
-    }
-    try {
-        
-    const block = await mineMempoolTransactions(req.body?.miner)
-        res.status(200).json({ message: 'Mining completed successfully.',newBlock: block });
-    }
-    catch (error) {
-        console.error('Mining error:', error);
-        res.status(500).json({ error: 'Failed to mine transactions.' });
-    } */
-    
  
 app.get('/blocks', async (req, res) => {
     try {
@@ -270,10 +240,17 @@ app.post('/wallet/create', async (req, res) => {
         res.status(500).json({ error: 'Failed to create wallet.' });
     }
 });
-/* app.listen(PORT, () => {
-    console.log(`🚀 Server is running on http://localhost:${PORT}`);
-}); */
-// Start the server immediately
+app.get('/isInitialized', async (req, res) => {
+    try {
+        const initialized = await isInitialized();
+        console.log('Blockchain initialized:', initialized);
+        res.status(200).json({ initialized });
+    } catch (error) {
+        console.error('Error checking initialization:', error);
+        res.status(500).json({ error: 'Failed to check initialization.' });
+    }
+});
+
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
 
@@ -285,6 +262,4 @@ app.listen(PORT, async () => {
     }else {
        waitAndInitializeGenesisBlock();
     }
- 
-
 });

@@ -60,54 +60,6 @@ const getSolde = async (address) => {
 
 
 
-const verifierTransaction = async (transaction) => {
-    try {
-        const blockchain = await loadBlockchain();
-        if (!blockchain || !blockchain.head) {
-            throw new Error('Blockchain is empty or not loaded');
-        }
-
-        // Check if the transaction is already in the blockchain
-        let currentBlock = blockchain.head;
-        while (currentBlock) {
-            if (currentBlock.transactions) {
-                for (const tx of currentBlock.transactions) {
-                    if (tx.hash === transaction.hash) {
-                        return false; // Transaction already exists
-                    }
-                }
-            }
-            currentBlock = currentBlock.previous; // Assuming 'previous' points to the previous block
-        }
-
-         
-
-    let data = transaction.sender + transaction.amount + transaction.receipient + transaction.fees
-    let validSignature = verifySignatureCustom(data, transaction.sender, transaction.signature)
-    if (!validSignature)
-        return {
-            valid: false,
-            error: "invalid signature"
-        }
-
-    let solde = getSolde(transaction.sender)
-    if (solde < transaction.amount + transaction.fees)
-        return {
-            valid: false,
-            error: "pas de solde"
-        }
-
-    return {
-        valid: true
-    }
-
-
-
-    } catch (error) {
-        console.error('Error verifying transaction:', error);
-        throw error;
-    }
-}
 
 
 
@@ -165,6 +117,5 @@ const validateTransaction = async (tx) => {
 
 module.exports = {
     getSolde,
-    verifierTransaction,
     validateTransaction
 };

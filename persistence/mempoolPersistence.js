@@ -106,70 +106,7 @@ const removeTransactionFromMempool = async (transactionsToRemove) => {
     }
 }
 
-//it should be updated to take the entire block specific elements from frontend
-const mineMempoolTransactions = async (miner) => {
-    try {
-        //should be updated to the selected transactions
-        const transactions = await getAllMempoolTransactions();
-        console.log(transactions);
-        if (!transactions || transactions.length === 0) {
-           throw new Error('No transactions to mine.');
-        
-        }
 
-        const latestBlock = await getLatestBlock();
-        const blockchain = await loadBlockchain();
-        console.log("Blockchain loaded:", blockchain);
-
-        const height = latestBlock ? latestBlock.height + 1 : 0;
-        const previousBlock = latestBlock ? latestBlock.hash : '0';
-        const timestamp = Date.now();
-        const difficulty = blockchain.difficulty;
-        const blockReward = blockchain.blockReward;
-        
-
-        // Create a block
-        const newBlock = new Block(
-            height,
-            "", // hash will be calculated after PoW
-            previousBlock,
-            timestamp,
-            difficulty,
-            blockReward,
-            0,
-            miner
-        );
-
-        newBlock.transactions = transactions;
-        newBlock.hash = calculateHash(newBlock);
-      /*   mineBlockPoW(newBlock, difficulty); */
-        newBlock.blockchain=blockchain.name;
-        await transactions.forEach(tx => {
-            passTransaction(tx); 
-        }
-        );
-        await saveBlock(newBlock);
-        await removeTransactionFromMempool(transactions) ; // Clear mempool
-
-        console.log("New block miner:", newBlock.miner);
-        let minerWallet = await getWalletByPublicKey(newBlock.miner);
-        console.log("Miner Wallet:", minerWallet);
-        let totalFees = transactions.reduce((acc, tx) => acc + (tx.fees || 0), 0);
-        minerWallet.solde += newBlock.blockReward + totalFees; // Add block reward and total fees to miner's wallet
-        await transactions.forEach(tx => {
-        minerWallet.minedTransactions.push(tx)
-        }  );
-        console.log("Updated Miner Wallet:", minerWallet);
-        await addOrUpdateWallet(minerWallet);
-        blockchain.head = newBlock.hash; // Update blockchain head
-        await saveBlockchain(blockchain)
-        return  newBlock ;
-
-    } catch (err) {
-        console.error("Error during mining:");
-        throw err;
-    }
-}
 
 const validateAndSaveMinedBlock = async (submittedBlock) => {
     try {
@@ -243,6 +180,6 @@ minerWallet.minedTransactions.push(tx)
 };
 
 
-module.exports = {validateAndSaveMinedBlock, getAllMempoolTransactions, saveMempoolTransactions, addTransactionToMempool, removeTransactionFromMempool, mineMempoolTransactions };
+module.exports = {validateAndSaveMinedBlock, getAllMempoolTransactions, saveMempoolTransactions, addTransactionToMempool, removeTransactionFromMempool };
 
 

@@ -7,384 +7,455 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="styles.css">
-
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center" href="#" data-page="dashboard">
-        <div class="crypto-icon me-2">
-          <i class="bi bi-currency-bitcoin"></i>
-        </div>
-        uemfBlockchain
-      </a>
-      
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="#" data-page="dashboard">
-              <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-page="wallet">
-              <i class="bi bi-wallet2"></i> Wallet
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-page="transactions">
-              <i class="bi bi-send"></i> Transactions
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-page="mining">
-              <i class="bi bi-cpu"></i> Mining
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-page="explorer">
-              <i class="bi bi-link-45deg"></i> Explorer
-            </a>
-          </li>
-        </ul>
-        
-        <div class="d-flex">
-          <div class="status-badge me-3">
-            <i class="bi bi-circle-fill text-success me-1"></i>
-            <span id="nodeStatus">Connected to Node</span>
-          </div>
-          <div class="status-badge">
-            <i class="bi bi-hdd-stack me-1"></i>
-            <span id="blockHeight">Loading...</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
 
-  <!-- Dashboard Page -->
-  <div class="container page-container active" id="dashboard-page">
-    <div class="text-center mb-5">
-      <h1 class="display-4 fw-bold mb-3">uemfBlockchain Dashboard</h1>
-      <p class="lead">Overview of the uemf blockchain network</p>
-        <p class="lead">A Node.js implementation of a Proof-of-Work blockchain network featuring real-time block visualization, transaction management, and mining operations</p>
-    </div>
-    
-    <div class="row">
-      <div class="col-md-6">
-        <!-- Network Status Card -->
-        <div class="card">
-          <div class="card-header d-flex align-items-center">
-            <i class="bi bi-hdd-network me-2"></i>
-            Network Status
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Network</div>
-                <div>uemfBlockchain</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Consensus</div>
-                <div>Proof of Work (PoW)</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Block Time</div>
-                <div>~10 minutes</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Coin Symbol</div>
-                <div>uemfCoin (UC)</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Port</div>
-                <div>3000</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-muted small">Created by</div>
-                <div>Mohamed KHEDID</div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- Initialization Container (Hidden by default) -->
+  <div id="initialization-page" class="container" style="display: none;">
+    <div class="text-center py-5">
+      <div class="crypto-icon mb-4">
+        <i class="bi bi-currency-bitcoin display-1 text-warning"></i>
       </div>
       
-      <div class="col-md-6">
-        <!-- Quick Actions Card -->
-        <div class="card">
-          <div class="card-header d-flex align-items-center">
-            <i class="bi bi-lightning-charge me-2"></i>
-            Quick Actions
-          </div>
-          <div class="card-body">
-            <div class="d-grid gap-2">
-              <a href="#" class="btn btn-primary" data-page="wallet">
-                <i class="bi bi-wallet2 me-1"></i> Create Wallet
-              </a>
-              <a href="#" class="btn btn-success" data-page="transactions">
-                <i class="bi bi-send me-1"></i> Send Transaction
-              </a>
-              <a href="#" class="btn btn-warning" data-page="mining">
-                <i class="bi bi-cpu me-1"></i> Mine Block
-              </a>
-              <a href="#" class="btn btn-info" data-page="explorer">
-                <i class="bi bi-link-45deg me-1"></i> Explore Blockchain
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Wallet Page -->
-  <div class="container page-container" id="wallet-page">
-    <div class="text-center mb-5">
-      <h1 class="display-4 fw-bold mb-3">Wallet Management</h1>
-      <p class="lead">Create and manage your blockchain wallets</p>
-    </div>
-    
-    <div class="row">
-      <div class="col-lg-6">
-        <!-- Wallet Creation -->
-        <div class="card wallet-card mb-4">
-          <div class="card-header d-flex align-items-center">
-            <i class="bi bi-wallet2 me-2"></i>
-            Create Wallet
-          </div>
-          <div class="card-body">
-            <div class="mb-3">
-              <p>Create a new wallet to start transacting on the uemf blockchain.</p>
-              <button type="button" id="createWalletBtn" class="btn btn-primary w-100" >
-                <i class="bi bi-plus-circle me-1"></i>
-                <span id="createWalletBtnText">Create New Wallet</span>
-                <span id="walletSpinner" class="spinner" style="display: none;"></span>
-              </button>
-            </div>
-            <div id="walletResult" class="mt-3" style="display: none;">
-              <div class="alert alert-success">
-                <i class="bi bi-check-circle me-2"></i>
-                Wallet created successfully! Please save your private key securely.
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Public Key</label>
-                <div class="key-display">
-                  <span id="publicKeyDisplay">None</span>
-                  <button class="btn btn-sm btn-outline-light copy-btn" data-key="public">
-                    <i class="bi bi-clipboard"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Private Key</label>
-                <div class="key-display">
-                  <span id="privateKeyDisplay">None</span>
-                  <button class="btn btn-sm btn-outline-light copy-btn" data-key="private">
-                    <i class="bi bi-clipboard"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="alert alert-warning">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                Your private key is only shown once. Save it securely as it cannot be recovered.
-              </div>
-            </div>
-          </div>
-        </div>
+      <h1 class="display-4 fw-bold mb-3">Blockchain Initialization</h1>
+      
+      <div class="alert alert-info mx-auto" style="max-width: 600px;">
+        <i class="bi bi-info-circle me-2"></i>
+        The uemf blockchain is currently initializing. During the first 10 minutes, 
+        every wallet created will receive <span class="fw-bold">100 uemfCoins</span>.
       </div>
       
-      <div class="col-lg-6">
-        <!-- Wallet Balance Checker -->
-        <div class="card mb-4">
-          <div class="card-header d-flex align-items-center">
-            <i class="bi bi-wallet2 me-2"></i>
-            Wallet Balance
-          </div>
-          <div class="card-body">
-            <form id="balanceForm" class="row g-3">
-              <div class="col-md-8">
-                <input type="text" class="form-control" id="address" placeholder="Enter public key" required>
-              </div>
-              <div class="col-md-4">
-                <button type="submit" class="btn btn-success w-100" id="balanceBtn">
-                  <span id="balanceBtnText">Check Balance</span>
-                  <span id="balanceSpinner" class="spinner" style="display: none;"></span>
+      <div class="card wallet-card mb-4">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-wallet2 me-2"></i>
+              Create Wallet
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <p>Create a new wallet to start transacting on the uemf blockchain.</p>
+                <button type="button" id="createWalletBtn" class="btn btn-primary w-100">
+                  <i class="bi bi-plus-circle me-1"></i>
+                  <span id="createWalletBtnText">Create New Wallet</span>
+                  <span id="walletSpinner" class="spinner" style="display: none;"></span>
                 </button>
               </div>
-            </form>
-            <div class="mt-4 text-center" id="balanceResult">
-              <div class="d-flex justify-content-center align-items-center">
-                <i class="bi bi-wallet2 me-2 fs-3"></i>
-                <div>
-                  <div class="text-muted small">uemfCoin Balance</div>
-                  <div class="balance-display">--.--</div>
+              <div id="walletResult" class="mt-3" style="display: none;">
+                <div class="alert alert-success">
+                  <i class="bi bi-check-circle me-2"></i>
+                  Wallet created successfully! Please save your private key securely.
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Public Key</label>
+                  <div class="key-display">
+                    <span id="publicKeyDisplay">None</span>
+                    <button class="btn btn-sm btn-outline-light copy-btn" data-key="public">
+                      <i class="bi bi-clipboard"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Private Key</label>
+                  <div class="key-display">
+                    <span id="privateKeyDisplay">None</span>
+                    <button class="btn btn-sm btn-outline-light copy-btn" data-key="private">
+                      <i class="bi bi-clipboard"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="alert alert-warning">
+                  <i class="bi bi-exclamation-triangle me-2"></i>
+                  Your private key is only shown once. Save it securely as it cannot be recovered.
                 </div>
               </div>
-              <div class="mt-2 small text-muted">Public Key: <span id="balanceAddress" class="address-truncate">None</span></div>
             </div>
           </div>
+      
+      <div class="mt-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-      </div>
-    </div>
-  
-
-
-    <div class="col-lg-6">
-      <!-- All Wallets Section -->
-      <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <div>
-            <i class="bi bi-wallet me-2"></i>
-            All Wallets
-          </div>
-          <div>
-            <button class="btn btn-outline-light btn-sm" id="refreshWalletsBtn">
-              <i class="bi bi-arrow-repeat"></i> Refresh
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="mb-3" id="walletsEmpty" style="display: none;">
-            <div class="text-center py-4">
-              <i class="bi bi-wallet fs-1 text-muted"></i>
-              <p class="mt-2">No wallets found</p>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-borderless table-hover align-middle" id="walletsTable">
-              <thead>
-                <tr>
-                  <th scope="col">Public Key</th>
-                  <th scope="col" class="text-end">Balance (UC)</th>
-                </tr>
-              </thead>
-              <tbody id="walletsList">
-                <!-- Wallets will be populated here -->
-              </tbody>
-            </table>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="text-muted small" id="walletsCount">Showing 0 wallets</div>
-            <div class="d-flex gap-2">
-              <button class="btn btn-sm btn-outline-primary" id="prevWalletPage" disabled>
-                <i class="bi bi-chevron-left"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-primary" id="nextWalletPage" disabled>
-                <i class="bi bi-chevron-right"></i>
-              </button>
-            </div>
-          </div>
-        </div>
+        <p class="mt-3 text-muted">Initializing blockchain network...</p>
       </div>
     </div>
   </div>
-</div>
-  <!-- Transactions Page -->
-  <div class="container page-container" id="transactions-page">
-    <div class="text-center mb-5">
-      <h1 class="display-4 fw-bold mb-3">Transactions</h1>
-      <p class="lead">Create and send transactions on the uemf blockchain</p>
-    </div>
-    
-    <div class="row">
-      <div class="col-lg-6">
-        <!-- Send Transaction -->
-        <div class="card mb-4">
-          <div class="card-header d-flex align-items-center">
-            <i class="bi bi-send me-2"></i>
-            Create & Send Transaction
+
+  <!-- Main Application (Hidden until initialized) -->
+  <div id="main-app" style="display: none;">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#" data-page="dashboard">
+          <div class="crypto-icon me-2">
+            <i class="bi bi-currency-bitcoin"></i>
           </div>
-          <div class="card-body">
-            <form id="transactionForm">
-              <div class="mb-3">
-                <label for="sender" class="form-label">Sender Public Key</label>
-                <input type="text" class="form-control" id="sender" required>
-              </div>
-              <div class="mb-3">
-                <label for="receiver" class="form-label">Receiver Address</label>
-                <input type="text" class="form-control" id="receiver" required>
-              </div>
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="amount" class="form-label">Amount (uemfCoin)</label>
-                  <input type="number" class="form-control" id="amount" min="0.01" step="0.01" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="fees" class="form-label">Transaction Fee</label>
-                  <input type="number" class="form-control" id="fees" min="0.01" step="0.01" value="0.1" required>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="signature" class="form-label">Signature</label>
-                <textarea class="form-control" id="signature" rows="2" placeholder="Enter transaction signature" required></textarea>
-                <div class="form-text">Sign your transaction before submitting</div>
-              </div>
-              <button type="submit" class="btn btn-primary w-100" id="txBtn">
-                <span id="txBtnText">Submit Transaction</span>
-                <span id="txSpinner" class="spinner" style="display: none;"></span>
-              </button>
-            </form>
-            <div id="txResult" class="mt-3 alert" style="display: none;"></div>
+          uemfBlockchain
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="#" data-page="dashboard">
+                <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-page="wallet">
+                <i class="bi bi-wallet2"></i> Wallet
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-page="transactions">
+                <i class="bi bi-send"></i> Transactions
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-page="mining">
+                <i class="bi bi-cpu"></i> Mining
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-page="explorer">
+                <i class="bi bi-link-45deg"></i> Explorer
+              </a>
+            </li>
+          </ul>
+          
+          <div class="d-flex">
+            <div class="status-badge me-3">
+              <i class="bi bi-circle-fill text-success me-1"></i>
+              <span id="nodeStatus">Connected to Node</span>
+            </div>
+            <div class="status-badge">
+              <i class="bi bi-hdd-stack me-1"></i>
+              <span id="blockHeight">Loading...</span>
+            </div>
           </div>
         </div>
       </div>
+    </nav>
+
+    <!-- Dashboard Page -->
+    <div class="container page-container active" id="dashboard-page">
+      <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">uemfBlockchain Dashboard</h1>
+        <p class="lead">Overview of the uemf blockchain network</p>
+        <p class="lead">A Node.js implementation of a Proof-of-Work blockchain network featuring real-time block visualization, transaction management, and mining operations</p>
+      </div>
       
-      <div class="col-lg-6">
-        <!-- Mempool Viewer -->
-        <div class="card mb-4">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <div>
-              <i class="bi bi-collection me-2"></i>
-              Mempool
+      <div class="row">
+        <div class="col-md-6">
+          <!-- Network Status Card -->
+          <div class="card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-hdd-network me-2"></i>
+              Network Status
             </div>
-            <div>
-              <span class="badge bg-primary me-2" id="mempoolCount">0</span>
-              <button class="btn btn-outline-light btn-sm" id="refreshMempoolBtn">
-                <i class="bi bi-arrow-repeat"></i> Refresh
-              </button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="mb-3" id="mempoolEmpty" style="display: none;">
-              <div class="text-center py-4">
-                <i class="bi bi-inbox fs-1 text-muted"></i>
-                <p class="mt-2">Mempool is empty</p>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="text-muted small">Network</div>
+                  <div>uemfBlockchain</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="text-muted small">Consensus</div>
+                  <div>Proof of Work (PoW)</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="text-muted small">Block Time</div>
+                  <div>~10 minutes</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="text-muted small">Coin Symbol</div>
+                  <div>uemfCoin (UC)</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="text-muted small">Port</div>
+                  <div>3000</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="text-muted small">Created by</div>
+                  <div>Mohamed KHEDID</div>
+                </div>
               </div>
             </div>
-            <div id="mempoolList" class="overflow-auto" style="max-height: 300px;"></div>
           </div>
         </div>
+        
+        <div class="col-md-6">
+          <!-- Quick Actions Card -->
+          <div class="card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-lightning-charge me-2"></i>
+              Quick Actions
+            </div>
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                <a href="#" class="btn btn-primary" data-page="wallet">
+                  <i class="bi bi-wallet2 me-1"></i> Create Wallet
+                </a>
+                <a href="#" class="btn btn-success" data-page="transactions">
+                  <i class="bi bi-send me-1"></i> Send Transaction
+                </a>
+                <a href="#" class="btn btn-warning" data-page="mining">
+                  <i class="bi bi-cpu me-1"></i> Mine Block
+                </a>
+                <a href="#" class="btn btn-info" data-page="explorer">
+                  <i class="bi bi-link-45deg me-1"></i> Explore Blockchain
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wallet Page -->
+    <div class="container page-container" id="wallet-page">
+      <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">Wallet Management</h1>
+        <p class="lead">Create and manage your blockchain wallets</p>
+      </div>
       
-         <!-- NEW: Transaction Signing Guide -->
-      <div class="card mb-4">
-        <div class="card-header d-flex align-items-center">
-          <i class="bi bi-key me-2"></i>
-          Transaction Signing Guide
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <p>Use this Node.js script to sign your transactions before submitting them to the blockchain.</p>
-            
-            <div class="alert alert-info">
-              <i class="bi bi-info-circle me-2"></i>
-              Save this script as <code>sign-transaction.js</code> and run it with Node.js
+      <div class="row">
+        <div class="col-lg-6">
+          <!-- Wallet Creation -->
+          <div class="card wallet-card mb-4">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-wallet2 me-2"></i>
+              Create Wallet
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <p>Create a new wallet to start transacting on the uemf blockchain.</p>
+                <button type="button" id="createWalletBtn" class="btn btn-primary w-100">
+                  <i class="bi bi-plus-circle me-1"></i>
+                  <span id="createWalletBtnText">Create New Wallet</span>
+                  <span id="walletSpinner" class="spinner" style="display: none;"></span>
+                </button>
+              </div>
+              <div id="walletResult" class="mt-3" style="display: none;">
+                <div class="alert alert-success">
+                  <i class="bi bi-check-circle me-2"></i>
+                  Wallet created successfully! Please save your private key securely.
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Public Key</label>
+                  <div class="key-display">
+                    <span id="publicKeyDisplay">None</span>
+                    <button class="btn btn-sm btn-outline-light copy-btn" data-key="public">
+                      <i class="bi bi-clipboard"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Private Key</label>
+                  <div class="key-display">
+                    <span id="privateKeyDisplay">None</span>
+                    <button class="btn btn-sm btn-outline-light copy-btn" data-key="private">
+                      <i class="bi bi-clipboard"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="alert alert-warning">
+                  <i class="bi bi-exclamation-triangle me-2"></i>
+                  Your private key is only shown once. Save it securely as it cannot be recovered.
+                </div>
+              </div>
             </div>
           </div>
-          
-          <div class="mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <h5>Signing Script</h5>
-              <button class="btn btn-sm btn-outline-primary" id="copySigningScriptBtn">
-                <i class="bi bi-clipboard me-1"></i> Copy Code
-              </button>
+        </div>
+        
+        <div class="col-lg-6">
+          <!-- Wallet Balance Checker -->
+          <div class="card mb-4">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-wallet2 me-2"></i>
+              Wallet Balance
             </div>
-            <pre class="bg-dark text-light p-3 rounded" style="max-height: 400px; overflow: auto;">
-              <code id="signingScriptCode">
+            <div class="card-body">
+              <form id="balanceForm" class="row g-3">
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="address" placeholder="Enter public key" required>
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-success w-100" id="balanceBtn">
+                    <span id="balanceBtnText">Check Balance</span>
+                    <span id="balanceSpinner" class="spinner" style="display: none;"></span>
+                  </button>
+                </div>
+              </form>
+              <div class="mt-4 text-center" id="balanceResult">
+                <div class="d-flex justify-content-center align-items-center">
+                  <i class="bi bi-wallet2 me-2 fs-3"></i>
+                  <div>
+                    <div class="text-muted small">uemfCoin Balance</div>
+                    <div class="balance-display">--.--</div>
+                  </div>
+                </div>
+                <div class="mt-2 small text-muted">Public Key: <span id="balanceAddress" class="address-truncate">None</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="row">
+        <div class="col-lg-6">
+          <!-- All Wallets Section -->
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <div>
+                <i class="bi bi-wallet me-2"></i>
+                All Wallets
+              </div>
+              <div>
+                <button class="btn btn-outline-light btn-sm" id="refreshWalletsBtn">
+                  <i class="bi bi-arrow-repeat"></i> Refresh
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="mb-3" id="walletsEmpty" style="display: none;">
+                <div class="text-center py-4">
+                  <i class="bi bi-wallet fs-1 text-muted"></i>
+                  <p class="mt-2">No wallets found</p>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-borderless table-hover align-middle" id="walletsTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">Public Key</th>
+                      <th scope="col" class="text-end">Balance (UC)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="walletsList">
+                    <!-- Wallets will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="text-muted small" id="walletsCount">Showing 0 wallets</div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-outline-primary" id="prevWalletPage" disabled>
+                    <i class="bi bi-chevron-left"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary" id="nextWalletPage" disabled>
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transactions Page -->
+    <div class="container page-container" id="transactions-page">
+      <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">Transactions</h1>
+        <p class="lead">Create and send transactions on the uemf blockchain</p>
+      </div>
+      
+      <div class="row">
+        <div class="col-lg-6">
+          <!-- Send Transaction -->
+          <div class="card mb-4">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-send me-2"></i>
+              Create & Send Transaction
+            </div>
+            <div class="card-body">
+              <form id="transactionForm">
+                <div class="mb-3">
+                  <label for="sender" class="form-label">Sender Public Key</label>
+                  <input type="text" class="form-control" id="sender" required>
+                </div>
+                <div class="mb-3">
+                  <label for="receiver" class="form-label">Receiver Address</label>
+                  <input type="text" class="form-control" id="receiver" required>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="amount" class="form-label">Amount (uemfCoin)</label>
+                    <input type="number" class="form-control" id="amount" min="0.01" step="0.01" required>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="fees" class="form-label">Transaction Fee</label>
+                    <input type="number" class="form-control" id="fees" min="0.01" step="0.01" value="0.1" required>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="signature" class="form-label">Signature</label>
+                  <textarea class="form-control" id="signature" rows="2" placeholder="Enter transaction signature" required></textarea>
+                  <div class="form-text">Sign your transaction before submitting</div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" id="txBtn">
+                  <span id="txBtnText">Submit Transaction</span>
+                  <span id="txSpinner" class="spinner" style="display: none;"></span>
+                </button>
+              </form>
+              <div id="txResult" class="mt-3 alert" style="display: none;"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-6">
+          <!-- Mempool Viewer -->
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <div>
+                <i class="bi bi-collection me-2"></i>
+                Mempool
+              </div>
+              <div>
+                <span class="badge bg-primary me-2" id="mempoolCount">0</span>
+                <button class="btn btn-outline-light btn-sm" id="refreshMempoolBtn">
+                  <i class="bi bi-arrow-repeat"></i> Refresh
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="mb-3" id="mempoolEmpty" style="display: none;">
+                <div class="text-center py-4">
+                  <i class="bi bi-inbox fs-1 text-muted"></i>
+                  <p class="mt-2">Mempool is empty</p>
+                </div>
+              </div>
+              <div id="mempoolList" class="overflow-auto" style="max-height: 300px;"></div>
+            </div>
+          </div>
+        
+          <!-- Transaction Signing Guide -->
+          <div class="card mb-4">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-key me-2"></i>
+              Transaction Signing Guide
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <p>Use this Node.js script to sign your transactions before submitting them to the blockchain.</p>
+                
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Save this script as <code>sign-transaction.js</code> and run it with Node.js
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h5>Signing Script</h5>
+                  <button class="btn btn-sm btn-outline-primary" id="copySigningScriptBtn">
+                    <i class="bi bi-clipboard me-1"></i> Copy Code
+                  </button>
+                </div>
+                <pre class="bg-dark text-light p-3 rounded" style="max-height: 400px; overflow: auto;">
+                  <code id="signingScriptCode">
 const crypto = require('crypto');
 
 // Wrap base64 key with PEM format
@@ -440,82 +511,76 @@ const transaction = {
 };
 
 console.log(JSON.stringify(transaction, null, 2));
-              </code>
-            </pre>
-          </div>
-          
-          <div class="mb-3">
-            <h5>How to Use</h5>
-            <ol class="list-group list-group-numbered">
-              <li class="list-group-item bg-transparent text-light border-light">
-                Save the script as <code>sign-transaction.js</code>
-              </li>
-              <li class="list-group-item bg-transparent text-light border-light">
-                Replace <code>YOUR_PUBLIC_KEY_BASE64</code> and <code>YOUR_PRIVATE_KEY_BASE64</code> with your keys
-              </li>
-              <li class="list-group-item bg-transparent text-light border-light">
-                Run the script with Node.js: 
-                <div class="bg-dark text-light p-2 mt-2 rounded">
-                  <code>node sign-transaction.js &lt;receiverPublicKey&gt; &lt;amount&gt; &lt;fees&gt;</code>
-                </div>
-              </li>
-              <li class="list-group-item bg-transparent text-light border-light">
-                Copy the generated signature into the transaction form
-              </li>
-            </ol>
-          </div>
-          
-          <div class="alert alert-warning">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            Keep your private key secure!
-          </div>
-          
-          <div class="alert alert-success">
-            <i class="bi bi-lightbulb me-2"></i>
-            <strong>Tip:</strong> When you create a wallet on this page, the keys are displayed in Base64 format ready for use.
+                  </code>
+                </pre>
+              </div>
+              
+              <div class="mb-3">
+                <h5>How to Use</h5>
+                <ol class="list-group list-group-numbered">
+                  <li class="list-group-item bg-transparent text-light border-light">
+                    Save the script as <code>sign-transaction.js</code>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light border-light">
+                    Replace <code>YOUR_PUBLIC_KEY_BASE64</code> and <code>YOUR_PRIVATE_KEY_BASE64</code> with your keys
+                  </li>
+                  <li class="list-group-item bg-transparent text-light border-light">
+                    Run the script with Node.js: 
+                    <div class="bg-dark text-light p-2 mt-2 rounded">
+                      <code>node sign-transaction.js &lt;receiverPublicKey&gt; &lt;amount&gt; &lt;fees&gt;</code>
+                    </div>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light border-light">
+                    Copy the generated signature into the transaction form
+                  </li>
+                </ol>
+              </div>
+              
+              <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Keep your private key secure!
+              </div>
+              
+              <div class="alert alert-success">
+                <i class="bi bi-lightbulb me-2"></i>
+                <strong>Tip:</strong> When you create a wallet on this page, the keys are displayed in Base64 format ready for use.
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+
+    <!-- Mining Page -->
+    <div class="container page-container" id="mining-page">
+      <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">Block Mining</h1>
+        <p class="lead">Mine new blocks and earn rewards</p>
       </div>
-
-
-
-    </div>
-  </div>
-
-  <!-- Mining Page -->
-  <div class="container page-container" id="mining-page">
-    <div class="text-center mb-5">
-      <h1 class="display-4 fw-bold mb-3">Block Mining</h1>
-      <p class="lead">Mine new blocks and earn rewards</p>
-    </div>
-    
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <!-- Mining Block -->
-        <div class="card mb-4">
-          <div class="card-header d-flex align-items-center">
-            <i class="bi bi-cpu me-2"></i>
-            Manual Mining
-          </div>
-          <div class="card-body">
-            <div class="mb-4">
-              <h5>Automated Mining Instructions</h5>
-              <p>Run this mining bot on your node to automatically mine blocks and earn rewards. The bot will continuously fetch mining jobs, solve proof-of-work, and submit blocks.</p>
-              
-              <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>
-                Install required dependencies: <code>npm install axios crypto</code>
-              </div>
+      
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <!-- Mining Block -->
+          <div class="card mb-4">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-cpu me-2"></i>
+              Manual Mining
             </div>
-            
-            <div class="mb-4">
-              <h5>Mining Bot Code</h5>
-              <pre class="bg-dark text-light p-3 rounded" style="max-height: 300px; overflow: auto;">
-                <code id="miningBotCode">
+            <div class="card-body">
+              <div class="mb-4">
+                <h5>Automated Mining Instructions</h5>
+                <p>Run this mining bot on your node to automatically mine blocks and earn rewards. The bot will continuously fetch mining jobs, solve proof-of-work, and submit blocks.</p>
+                
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Install required dependencies: <code>npm install axios crypto</code>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <h5>Mining Bot Code</h5>
+                <pre class="bg-dark text-light p-3 rounded" style="max-height: 300px; overflow: auto;">
+                  <code id="miningBotCode">
 const axios = require('axios');
 const crypto = require('crypto');
 
@@ -591,156 +656,192 @@ async function runMiningBot() {
 
 // Start the mining bot
 runMiningBot();</code>
-              </pre>
-              
-              <div class="d-flex justify-content-between align-items-center">
-                <button class="btn btn-sm btn-outline-primary" id="copyBotCodeBtn">
-                  <i class="bi bi-clipboard me-1"></i> Copy Bot Code
-                </button>
-               
+                </pre>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                  <button class="btn btn-sm btn-outline-primary" id="copyBotCodeBtn">
+                    <i class="bi bi-clipboard me-1"></i> Copy Bot Code
+                  </button>
+                </div>
               </div>
-            </div>
-            
-            <div class="mb-3">
-              <h5>How to Run</h5>
-              <ol class="list-group list-group-numbered">
-                <li class="list-group-item bg-transparent text-light border-light">
-                  Create a new JavaScript file (e.g., <code>mining-bot.js</code>)
-                </li>
-                <li class="list-group-item bg-transparent text-light border-light">
-                  Paste the code above into the file
-                </li>
-                <li class="list-group-item bg-transparent text-light border-light">
-                  Replace <code>YOUR_PUBLIC_KEY_HERE</code> with your miner's public key
-                </li>
-                <li class="list-group-item bg-transparent text-light border-light">
-                  Install required dependencies: <code>npm install axios crypto</code>
-                </li>
-                <li class="list-group-item bg-transparent text-light border-light">
-                  Run the bot: <code>node mining-bot.js</code>
-                </li>
-              </ol>
-            </div>
-            
-            <div class="alert alert-warning">
-              <i class="bi bi-exclamation-triangle me-2"></i>
-              Keep your node running 24/7 for continuous mining. Each successfully mined block earns you the block reward plus transaction fees.
+              
+              <div class="mb-3">
+                <h5>How to Run</h5>
+                <ol class="list-group list-group-numbered">
+                  <li class="list-group-item bg-transparent text-light border-light">
+                    Create a new JavaScript file (e.g., <code>mining-bot.js</code>)
+                  </li>
+                  <li class="list-group-item bg-transparent text-light border-light">
+                    Paste the code above into the file
+                  </li>
+                  <li class="list-group-item bg-transparent text-light border-light">
+                    Replace <code>YOUR_PUBLIC_KEY_HERE</code> with your miner's public key
+                  </li>
+                  <li class="list-group-item bg-transparent text-light border-light">
+                    Install required dependencies: <code>npm install axios crypto</code>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light border-light">
+                    Run the bot: <code>node mining-bot.js</code>
+                  </li>
+                </ol>
+              </div>
+              
+              <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Keep your node running 24/7 for continuous mining. Each successfully mined block earns you the block reward plus transaction fees.
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Blockchain Explorer Page -->
+    <div class="container page-container" id="explorer-page">
+      <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">Blockchain Explorer</h1>
+        <p class="lead">Explore the uemf blockchain network</p>
+      </div>
+      
+      <div class="blockchain-header">
+        <h2><i class="bi bi-link-45deg me-2"></i> Blockchain</h2>
+        <div class="blockchain-controls">
+          <button id="refreshBlockchainBtn" class="btn btn-outline-light">
+            <i class="bi bi-arrow-repeat"></i> Refresh
+          </button>
+          <div class="input-group" style="width: 200px;">
+            <input type="text" id="blockSearch" class="form-control" placeholder="Search by block height">
+            <button class="btn btn-primary" id="searchBlockBtn">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Blockchain Explorer Page -->
-  <div class="container page-container" id="explorer-page">
-    <div class="text-center mb-5">
-      <h1 class="display-4 fw-bold mb-3">Blockchain Explorer</h1>
-      <p class="lead">Explore the uemf blockchain network</p>
-    </div>
-    
-    <div class="blockchain-header">
-      <h2><i class="bi bi-link-45deg me-2"></i> Blockchain</h2>
-      <div class="blockchain-controls">
-        <button id="refreshBlockchainBtn" class="btn btn-outline-light">
-          <i class="bi bi-arrow-repeat"></i> Refresh
-        </button>
-        <div class="input-group" style="width: 200px;">
-          <input type="text" id="blockSearch" class="form-control" placeholder="Search by block height ">
-          <button class="btn btn-primary" id="searchBlockBtn">
-            <i class="bi bi-search"></i>
+      
+      <div class="blockchain-container">
+        <div class="blockchain-visual" id="blockchainVisual">
+          <div class="chain-line"></div>
+          <div id="blocksContainer"></div>
+        </div>
+        
+        <div class="pagination" id="pagination">
+          <button class="page-btn" id="prevPageBtn" disabled>
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <span id="pageInfo">Page 1 of 1</span>
+          <button class="page-btn" id="nextPageBtn">
+            <i class="bi bi-chevron-right"></i>
           </button>
         </div>
       </div>
-    </div>
-    
-    <div class="blockchain-container">
-      <div class="blockchain-visual" id="blockchainVisual">
-        <div class="chain-line"></div>
-        <div id="blocksContainer"></div>
-      </div>
       
-      <div class="pagination" id="pagination">
-        <button class="page-btn" id="prevPageBtn" disabled>
-          <i class="bi bi-chevron-left"></i>
-        </button>
-        <span id="pageInfo">Page 1 of 1</span>
-        <button class="page-btn" id="nextPageBtn">
-          <i class="bi bi-chevron-right"></i>
-        </button>
-      </div>
-    </div>
-    
-    <div class="block-detail-view" id="blockDetailView">
-      <div class="back-to-chain" id="backToChainBtn">
-        <i class="bi bi-arrow-left me-1"></i> Back to blockchain
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Block Details</h5>
+      <div class="block-detail-view" id="blockDetailView">
+        <div class="back-to-chain" id="backToChainBtn">
+          <i class="bi bi-arrow-left me-1"></i> Back to blockchain
         </div>
-        <div class="card-body">
-          <div class="detail-grid">
-            <div class="detail-section">
-              <div class="detail-label">Height</div>
-              <div class="detail-value" id="detailHeight"></div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">Hash</div>
-              <div class="detail-value" id="detailHash"></div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">Previous Hash</div>
-              <div class="detail-value" id="detailPreviousHash"></div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">Timestamp</div>
-              <div class="detail-value" id="detailTimestamp"></div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">Difficulty</div>
-              <div class="detail-value" id="detailDifficulty"></div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">Block Reward</div>
-              <div class="detail-value" id="detailBlockReward"></div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">Nonce</div>
-              <div class="detail-value" id="detailNonce"></div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">Miner</div>
-              <div class="detail-value" id="detailMiner"></div>
-            </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Block Details</h5>
           </div>
-          
-          <div class="transactions-list">
-            <h6 class="mt-4 mb-3">Transactions <span class="tx-count" id="txCount">0</span></h6>
-            <div id="transactionsList"></div>
+          <div class="card-body">
+            <div class="detail-grid">
+              <div class="detail-section">
+                <div class="detail-label">Height</div>
+                <div class="detail-value" id="detailHeight"></div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Hash</div>
+                <div class="detail-value" id="detailHash"></div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Previous Hash</div>
+                <div class="detail-value" id="detailPreviousHash"></div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Timestamp</div>
+                <div class="detail-value" id="detailTimestamp"></div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Difficulty</div>
+                <div class="detail-value" id="detailDifficulty"></div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Block Reward</div>
+                <div class="detail-value" id="detailBlockReward"></div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Nonce</div>
+                <div class="detail-value" id="detailNonce"></div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Miner</div>
+                <div class="detail-value" id="detailMiner"></div>
+              </div>
+            </div>
+            
+            <div class="transactions-list">
+              <h6 class="mt-4 mb-3">Transactions <span class="tx-count" id="txCount">0</span></h6>
+              <div id="transactionsList"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h5>uemfBlockchain Client</h5>
-          <p class="mb-0">A user interface for interacting with the uemf blockchain network.</p>
-        </div>
-        <div class="col-md-6 text-md-end">
-          <div class="text-muted small">Connected to: <span id="apiEndpoint">http://localhost:3000</span></div>
-         
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>uemfBlockchain Client</h5>
+            <p class="mb-0">A user interface for interacting with the uemf blockchain network.</p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <div class="text-muted small">Connected to: <span id="apiEndpoint">http://localhost:3000</span></div>
+          </div>
         </div>
       </div>
-    </div>
-  </footer>
-<script src="script.js"></script>
+    </footer>
+  </div> <!-- End of #main-app -->
+
+  <script src="script.js" defer></script>
+  <script>
+    // Check initialization status on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('http://localhost:3000/isInitialized');
+        const { initialized } = await response.json();
+        
+        if (initialized) {
+          document.getElementById('main-app').style.display = 'block';
+        } else {
+          document.getElementById('initialization-page').style.display = 'block';
+          startInitializationCountdown();
+        }
+      } catch (error) {
+        console.error('Error checking initialization:', error);
+        document.getElementById('initialization-page').style.display = 'block';
+      }
+    });
+
+    function startInitializationCountdown() {
+      const interval = setInterval(async () => {
+        try {
+          const response = await fetch('http://localhost:3000/isInitialized');
+          const { initialized } = await response.json();
+          
+          if (initialized) {
+            clearInterval(interval);
+            location.reload();
+          }
+        } catch (error) {
+          console.error('Error checking initialization:', error);
+        }
+      }, 10000);
+    }
+
+    
+  </script>
 </body>
 </html>
