@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const pathDb = path.join(process.cwd(), 'database/blocks');
 const { loadBlockchain, saveBlockchain } = require('./blockchainPersistence');
-const { getAllMempoolTransactions, passTransactionFromMempool, removeTransactionFromMempool } = require('./mempoolPersistence');
+
 const { getWalletByPublicKey, addOrUpdateWallet } = require('./walletPersistence');
 const { calculateHash } = require('../utils');
 
@@ -67,7 +67,11 @@ const getLatestBlock = async () => {
 
 const validateAndSaveMinedBlock = async (submittedBlock) => {
 
-    
+    const {
+    getAllMempoolTransactions,
+    passTransactionFromMempool,
+    removeTransactionFromMempool
+} = require('./mempoolPersistence');
 
     try {
         const blockchain = await loadBlockchain();

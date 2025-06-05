@@ -4,7 +4,7 @@ const path = require('path');
 const pathDb = path.join(process.cwd(), 'database/mempool.json');
 
 const {getWalletByPublicKey,addOrUpdateWallet} = require('./walletPersistence'); // Assuming this function retrieves a wallet by its public key
-const {validateTransaction} = require('./transactionPersistence')
+
 
 
 
@@ -35,6 +35,8 @@ const saveMempoolTransactions = async (transactions) => {
 }
 
  const addTransactionToMempool = async (transaction) => {
+    
+    const { validateTransaction } = require('./transactionPersistence');
     await validateTransaction(transaction);
     console.log("Adding transaction to mempool:");
     try {
