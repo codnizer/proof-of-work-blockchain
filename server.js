@@ -1,21 +1,22 @@
 const express = require('express');
-const { addTransactionToMempool, getAllMempoolTransactions, removeTransactionFromMempool } = require('./persistence/mempoolPersistence');
+const { addTransactionToMempool, getAllMempoolTransactions } = require('./persistence/mempoolPersistence');
 const { getAllBlocks, getLatestBlock,saveBlock } = require('./persistence/blockPersistence');
- const { getSolde } = require('./persistence/transactionPersistence');
- const { validateAndSaveMinedBlock } = require('./persistence/mempoolPersistence');
+const { getSolde } = require('./persistence/transactionPersistence');
+const { validateAndSaveMinedBlock } = require('./persistence/blockPersistence');
 const Block = require('./models/Block');
 const Transaction = require('./models/Transaction');
 const app = express();
 const Blockchain = require('./models/Blockchain'); 
-const crypto = require('crypto');
+ 
 const { createNewMinerWallet } = require('./persistence/walletPersistence');
 const { loadBlockchain, saveBlockchain } = require('./persistence/blockchainPersistence');
 const { getAllWallets, addOrUpdateWallet } = require('./persistence/walletPersistence');
+const { calculateGenesisBlockHash }  = require('./utils');
 const cors = require('cors');
-const PORT = 3000;
- 
 
- app.use(cors()); 
+const PORT = 3000;
+
+app.use(cors()); 
 app.use(express.json());
  
 
@@ -24,8 +25,7 @@ async function isInitialized() {
     const blockchain = await loadBlockchain();
 
     if (blockchain && blockchain.head) {
-      console.log('head:', blockchain.head);
-      return true; // Already initialized
+      return true; 
     }
 
     console.log('Blockchain not initialized yet.');
@@ -44,22 +44,18 @@ async function waitAndInitializeGenesisBlock() {
 
   try {
     const blockchain = await loadBlockchain();
-
     // If already initialized in the meantime, skip
     if (blockchain && blockchain.head) {
       console.log('Blockchain was initialized while waiting.');
       return;
     }
-
     const wallets = await getAllWallets();
     if (wallets.length === 0) {
       console.error("No wallets created during the wait period.");
       return;
     }
-
     const totalInitialCoins = 1000;
     const amountPerWallet = Math.floor(totalInitialCoins / wallets.length);
-
     const genesisTransactions = wallets.map(w => ({
       sender: "0x0",
       receiver: w.pkey,
@@ -79,13 +75,12 @@ async function waitAndInitializeGenesisBlock() {
       'genesis'
     );
     genesisBlock.transactions = genesisTransactions;
-    genesisBlock.hash = calculateBlockHash(genesisBlock);
+    genesisBlock.hash = calculateGenesisBlockHash(genesisBlock);
     await saveBlock(genesisBlock);
     let myBlockchain = new Blockchain();
     myBlockchain.head = genesisBlock.hash;
     await saveBlockchain(myBlockchain);
-
-    console.log('Genesis block created and blockchain initialized.');
+    console.log('Genesis block created successfully.');
 
     for (const wallet of wallets) {
       wallet.solde += amountPerWallet;
@@ -97,17 +92,9 @@ async function waitAndInitializeGenesisBlock() {
   }
 }
 
-// Utility hash function (replace with your blockchain hashing logic)
-function calculateBlockHash(block) {
-  const blockData = block.height + block.previousHash + block.timestamp + JSON.stringify(block.transactions) + block.nonce + block.miner;
-  return crypto.createHash('sha256').update(blockData).digest('hex');
-}
-
-
-
-// Health check
+ 
 app.get('/', (req, res) => {
-    res.send('🟢 uemfBlockchain server is running.');
+    res.send('UemfBlockchain server is running.');
 });
 
 app.post('/addTransaction', async (req, res) => {

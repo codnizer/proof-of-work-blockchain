@@ -1,10 +1,7 @@
-const fs = require('fs');
+
 const { loadBlockchain } = require('./blockchainPersistence');
-const { Transaction } = require('../models/Transaction'); // Assuming Transaction model is defined in models/transaction.js
-const path = require('path');
-const { verifySignatureCustom} = require('../utils'); // Assuming these functions are defined in utils.js
-const { getBlock } = require('./blockPersistence'); // Assuming this function retrieves a block by its hash
-const { wrapKey } = require('../utils'); // Assuming this function wraps a key for storage
+const { getBlock } = require('./blockPersistence'); 
+const { wrapKey } = require('../utils');
 const crypto = require('crypto');
  
 const { getWalletByPublicKey } = require('./walletPersistence'); 
@@ -59,11 +56,6 @@ const getSolde = async (address) => {
 };
 
 
-
-
-
-
-
 const validateTransaction = async (tx) => {
     const { signature, fees, amount, sender, receiver } = tx;
 
@@ -76,8 +68,7 @@ const validateTransaction = async (tx) => {
         throw new Error("Invalid transaction fees or amount.");
     }
 
-    // Check wallets exist
-    console.log('receiver:', receiver);
+    
     const senderWallet = await getWalletByPublicKey(sender);
     const receiverWallet = await getWalletByPublicKey(receiver);
 
@@ -102,14 +93,14 @@ const validateTransaction = async (tx) => {
     verify.update(sender + receiver + amount + fees);
     verify.end();
 
-    const pemSender = wrapKey(sender, 'public'); // 🧠 only for signature verification
+    const pemSender = wrapKey(sender, 'public');
     const isValidSignature = verify.verify(pemSender, signature, 'hex');
 
     if (!isValidSignature) {
         throw new Error("Invalid transaction signature.");
     }
 
-    return true; // Transaction is valid
+    return true; 
 };
 
 

@@ -1,10 +1,19 @@
 const crypto = require('crypto');
 
-const createHashCustom = input => {
-    const sha = crypto.createHash('sha256');
-    sha.update(input);
-    return sha.digest('hex');
-};
+ const calculateHash = (block) => {
+ 
+         const { height, previousHash, timestamp, transactions, difficulty, blockReward, nonce, miner } = block;
+         const txData = JSON.stringify(transactions);
+         return crypto.createHash('sha256')
+             .update(`${height}${previousHash}${timestamp}${txData}${difficulty}${blockReward}${nonce}${miner}`)
+             .digest('hex');
+ }
+
+
+ const  calculateGenesisBlockHash = (block) => {
+   const blockData = block.height + block.previousHash + block.timestamp + JSON.stringify(block.transactions) + block.nonce + block.miner;
+   return crypto.createHash('sha256').update(blockData).digest('hex');
+ }
 
 const createKeyPairCustom = () => {
     const keys = crypto.generateKeyPairSync('rsa', {
@@ -15,21 +24,7 @@ const createKeyPairCustom = () => {
     return keys;
 };
 
-const signDataCustom = (message, privKey) => {
-    const signer = crypto.createSign('SHA256');
-    signer.update(message);
-    return signer.sign(privKey, 'base64');
-};
 
-const verifySignatureCustom = (message, pubKey, sig) => {
-    const verifier = crypto.createVerify('SHA256');
-    verifier.update(message);
-    return verifier.verify(pubKey, sig, 'base64');
-};
-
-const checkProofOfWork = (hashed, difficulty) => {
-    return hashed.startsWith('0'.repeat(difficulty));
-};
 function extractBase64Key(pemKey) {
   return pemKey
     .replace(/-----BEGIN (?:PUBLIC|PRIVATE) KEY-----\n?/, '')
@@ -44,11 +39,9 @@ function wrapKey(base64Key, type = 'public') {
 }
 
 module.exports = {
-    createHashCustom,
     createKeyPairCustom,
-    signDataCustom,
-    verifySignatureCustom,
-    checkProofOfWork,
+    calculateHash,
     extractBase64Key,
-    wrapKey
+    wrapKey,
+    calculateGenesisBlockHash
 };

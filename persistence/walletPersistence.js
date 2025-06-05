@@ -16,7 +16,7 @@ const getAllWallets = async () => {
     } catch (error) {
         if (error.code === 'ENOENT') return [];
         console.error('Error reading wallets:', error);
-        return []; // safer to return empty than crash
+        return []; 
     }
 };
 
