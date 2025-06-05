@@ -14,7 +14,6 @@ A Node.js implementation of a Proof-of-Work blockchain network featuring real-ti
 - [Project Structure](#project-structure)  
 - [Customization](#customization)  
 - [Contributing](#contributing)  
-- [License](#license)  
 
 ---
 
@@ -106,8 +105,8 @@ The system consists of three main components:
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/uemf-blockchain.git
-cd uemf-blockchain
+git clone https://github.com/codnizer/proof-of-work-blockchain.git
+ 
 ```
 
 ### Create the database directory
@@ -173,7 +172,7 @@ Click on any block to see details
 View transactions within each block
 
 ## Project Structure
-
+```bash
 uemf-blockchain/
 ├── models/                 # Data models  
 │   ├── Block.js            # Block class  
@@ -194,6 +193,7 @@ uemf-blockchain/
 ├── server.js               # Main server  
 ├── package.json  
 └── README.md  
+``` 
 
 ## Customization
 You can customize the blockchain through parameters in models/Blockchain.js:
