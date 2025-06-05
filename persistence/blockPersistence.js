@@ -109,9 +109,10 @@ const validateAndSaveMinedBlock = async (submittedBlock) => {
         
 
         for (const tx of submittedBlock.transactions) {
-    await passTransactionFromMempool(tx); 
-    tx.block = submittedBlock.hash;
+            tx.block = submittedBlock.hash;
     tx.mempool = false;
+    await passTransactionFromMempool(tx); 
+    
 }
 
         // Step 5: Save block
@@ -126,8 +127,10 @@ const validateAndSaveMinedBlock = async (submittedBlock) => {
         minerWallet.solde += submittedBlock.blockReward + totalFees;
 
          for (const tx of submittedBlock.transactions) {
-minerWallet.minedTransactions.push(tx)
-}
+            tx.block = submittedBlock.hash;
+            tx.mempool = false;
+            minerWallet.minedTransactions.push(tx)
+            }
 
         await addOrUpdateWallet(minerWallet);
 
