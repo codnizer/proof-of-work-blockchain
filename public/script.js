@@ -323,18 +323,9 @@
     const data = await res.json();
 
     if (res.ok) {
-
-        
-     
-     
-    
-    
-
       elements.publicKeyDisplay.textContent = data.publicKey;
       elements.privateKeyDisplay.textContent = data.privateKey;
       elements.walletResult.style.display = "block";
-      // Dispatch custom event
-    
 
       document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', copyToClipboard);

@@ -30,7 +30,7 @@
               <i class="bi bi-wallet2 me-2"></i>
               Create Wallet
             </div>
-            <div class="card-body">
+             <div class="card-body">
               <div class="mb-3">
                 <p>Create a new wallet to start transacting on the uemf blockchain.</p>
                 <button type="button" id="createWalletBtn" class="btn btn-primary w-100">
@@ -583,9 +583,16 @@ console.log(JSON.stringify(transaction, null, 2));
                   <code id="miningBotCode">
 const axios = require('axios');
 const crypto = require('crypto');
+const readline = require('readline');
 
 // Replace with your actual miner's public key
 const MINER_PUBLIC_KEY = "YOUR_PUBLIC_KEY_HERE";
+
+// Create interface for user input
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 // Simple hash function for blocks
 function calculateHash(block) {
@@ -608,6 +615,33 @@ function mineBlock(block, difficulty) {
     }
 }
 
+// Display transactions and let user select which ones to include
+async function selectTransactions(mempool) {
+    return new Promise((resolve) => {
+        console.log("\n📜 Available transactions in mempool:");
+        mempool.forEach((tx, index) => {
+            console.log(`[${index}] Sender: ${tx.sender.substring(0, 20)}...`);
+            console.log(`    Receiver: ${tx.receiver.substring(0, 20)}...`);
+            console.log(`    Amount: ${tx.amount} | Fees: ${tx.fees}`);
+            console.log("----------------------------------------");
+        });
+
+        rl.question("\n⏳ Enter transaction numbers to include (comma separated, 'a' for all, 'n' for none): ", (answer) => {
+            let selectedTransactions = [];
+            
+            if (answer.toLowerCase() === 'a') {
+                selectedTransactions = [...mempool];
+            } else if (answer.toLowerCase() !== 'n') {
+                const indices = answer.split(',').map(num => parseInt(num.trim()));
+                selectedTransactions = mempool.filter((_, index) => indices.includes(index));
+            }
+            
+            console.log(`✅ Selected ${selectedTransactions.length} transactions to include in block`);
+            resolve(selectedTransactions);
+        });
+    });
+}
+
 // Mining bot loop
 async function startMining() {
     try {
@@ -616,7 +650,10 @@ async function startMining() {
         const { height, previousHash, difficulty, blockReward, mempool } = jobRes.data;
         const timestamp = Date.now();
 
-        // Step 2: Build block
+        // Step 2: Let miner select transactions
+        const selectedTransactions = await selectTransactions(mempool);
+
+        // Step 3: Build block with selected transactions
         let block = {
             height,
             hash: "", // To be calculated
@@ -626,14 +663,14 @@ async function startMining() {
             blockReward,
             nonce: 0,
             miner: MINER_PUBLIC_KEY,
-            transactions: mempool
+            transactions: selectedTransactions
         };
 
-        console.log("⛏️  Mining new block...");
+        console.log("\n⛏️  Mining new block...");
         const minedBlock = mineBlock(block, difficulty);
-        console.log(`✅ Block mined with hash: ${minedBlock.hash}`);
+        console.log(`\n✅ Block mined with hash: ${minedBlock.hash}`);
 
-        // Step 3: Submit block
+        // Step 4: Submit block
         const submitRes = await axios.post('http://localhost:3000/submitBlock', {
             block: minedBlock
         });
@@ -655,7 +692,13 @@ async function runMiningBot() {
 }
 
 // Start the mining bot
-runMiningBot();</code>
+console.log("🚀 Starting MinerBot with transaction selection...");
+runMiningBot();
+
+// Close readline interface on process exit
+process.on('exit', () => {
+    rl.close();
+});</code>
                 </pre>
                 
                 <div class="d-flex justify-content-between align-items-center">
