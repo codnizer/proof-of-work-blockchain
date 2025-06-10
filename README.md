@@ -1,4 +1,4 @@
-# Local Proof-of-Work Blockchain with Node.js  
+# Local Proof-of-Work UEMF Blockchain with Node.js  
 ## Blockchain Visualization  
 
 A Node.js implementation of a Proof-of-Work blockchain network featuring real-time block visualization, transaction management, and mining operations.

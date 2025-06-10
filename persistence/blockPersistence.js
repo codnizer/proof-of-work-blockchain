@@ -81,39 +81,31 @@ const validateAndSaveMinedBlock = async (submittedBlock) => {
         if (!submittedBlock || !Array.isArray(submittedBlock.transactions)) {
             throw new Error("Invalid block structure.");
         }
-
         // Step 2: Validate previous hash
         if (submittedBlock.previousHash !== (latestBlock ? latestBlock.hash : '0')) {
             throw new Error("Invalid previous block hash.");
         }
-
         // Step 3: Recalculate hash and check difficulty
         const recalculatedHash = calculateHash(submittedBlock);
         if (recalculatedHash !== submittedBlock.hash) {
             throw new Error("Invalid block hash.");
         }
-
         const difficultyPrefix = '0'.repeat(blockchain.difficulty);
         if (!submittedBlock.hash.startsWith(difficultyPrefix)) {
             throw new Error("Block does not satisfy difficulty.");
         }
-
         // Step 4: Validate transactions (light check here; expand as needed)
         const allMempoolTxs = await getAllMempoolTransactions();
         const submittedTxIds = await submittedBlock.transactions.map(tx => tx.signature);
         const isTxValid = await submittedTxIds.every(signature => allMempoolTxs.find(tx => tx.signature === signature));
-
         if (!isTxValid) {
             throw new Error("Block contains invalid or outdated transactions.");
         }
-        
-
         for (const tx of submittedBlock.transactions) {
             tx.block = submittedBlock.hash;
-    tx.mempool = false;
-    await passTransactionFromMempool(tx); 
-    
-}
+         tx.mempool = false;
+         await passTransactionFromMempool(tx); 
+            }
 
         // Step 5: Save block
         submittedBlock.blockchain = blockchain.name;

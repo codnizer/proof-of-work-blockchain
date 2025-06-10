@@ -37,14 +37,14 @@ async function isInitialized() {
   }
 }
 
-// Separate async function to wait 5 minutes and then create genesis block
+
 async function waitAndInitializeGenesisBlock() {
   console.log('Waiting 5 minutes for wallets creation...');
-  await new Promise(resolve => setTimeout(resolve, 1 * 30 * 1000)); // wait 5 minutes
+  await new Promise(resolve => setTimeout(resolve, 5 * 60 * 1000)); 
 
   try {
     const blockchain = await loadBlockchain();
-    // If already initialized in the meantime, skip
+    
     if (blockchain && blockchain.head) {
       console.log('Blockchain was initialized while waiting.');
       return;

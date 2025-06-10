@@ -14,11 +14,9 @@ const getSolde = async (address) => {
         }
         let balance = 0;
         let currentBlockHash = blockchain.head;
-
         while (currentBlockHash) {
             const currentBlock = await getBlock(currentBlockHash);
             if (!currentBlock) break;
-
             // If the address is the miner of the current block, add the block reward and fees
             if (address === currentBlock.miner) {
                 console.log("Adding block reward for miner");
@@ -30,7 +28,6 @@ const getSolde = async (address) => {
                 });
                 console.log("Adding fees for miner");
 
-               
                  console.log(balance);
             }
 
